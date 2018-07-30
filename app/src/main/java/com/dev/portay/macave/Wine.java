@@ -33,9 +33,9 @@ public class Wine
 
     //TODO: Checkout the @Ignore statement to use with an image ( https://developer.android.com/training/data-storage/room/defining-data )
 
-    /************** FUNCTIONS **************/
+    /* ************* FUNCTIONS ************* */
 
-    /** Constructor **/
+    /* * Constructor * */
     Wine(String mName, String mOrigin, String mColor, String mProducer)
     {
         this.mName = mName;
@@ -44,7 +44,7 @@ public class Wine
         this.mProducer = mProducer;
     }
 
-    /** Getters & Setters **/
+    /* * Getters & Setters * */
     public int getId()
     {
         return mId;

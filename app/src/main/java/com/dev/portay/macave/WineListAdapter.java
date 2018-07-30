@@ -1,5 +1,6 @@
 package com.dev.portay.macave;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +30,15 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
     private final boolean mTwoPane;
 
     /************** FUNCTIONS **************/
-    WineListAdapter(WineListActivity pParent, boolean pTwoPane)
+    WineListAdapter(WineListActivity mParent, boolean mTwoPane)
     {
-        mParentActivity = pParent;
-        mTwoPane = pTwoPane;
+        this.mParentActivity = mParent;
+        this.mTwoPane = mTwoPane;
     }
 
     @Override
-    public WineViewHolder onCreateViewHolder(ViewGroup pViewGroup, int pI)
+    @NonNull
+    public WineViewHolder onCreateViewHolder( @NonNull ViewGroup pViewGroup, int pI)
     {
         View lItemView = LayoutInflater.from(pViewGroup.getContext())
                 .inflate(R.layout.wine_list_content, pViewGroup, false);
@@ -45,11 +47,12 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
     }
 
     @Override
-    public void onBindViewHolder(final WineViewHolder pHolder, int pPosition)
+    public void onBindViewHolder(@NonNull final WineViewHolder pHolder, int pPosition)
     {
         if (mWines != null)
         {
-            pHolder.mWineItemView.setText(mWines.get(pPosition).getId());
+            String lNumber = String.format("%d", mWines.get(pPosition).getId());
+            pHolder.mWineItemView.setText(lNumber);
             pHolder.mWineContentView.setText(mWines.get(pPosition).getName());
         }
         else

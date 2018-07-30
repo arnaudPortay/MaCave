@@ -17,6 +17,6 @@ public interface WineDao
     @Query("DELETE FROM wine_table")
     void deleteAll();
 
-    @Query("SELECT * FROM wine_table ORDER BY mId ASC")
+    @Query("SELECT * FROM wine_table")
     LiveData<List<Wine>> getAllWines();
 }

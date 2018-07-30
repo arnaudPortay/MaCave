@@ -1,6 +1,7 @@
 package com.dev.portay.macave;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class WineDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
+    /* *
      * The dummy content this fragment is presenting.
      */
     //private DummyContent.DummyItem mItem;
@@ -48,7 +49,7 @@ public class WineDetailFragment extends Fragment {
             //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(/*mItem.content*/"TitlePH");
             }
@@ -56,7 +57,7 @@ public class WineDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wine_detail, container, false);
 
