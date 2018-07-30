@@ -35,11 +35,11 @@ public class WineListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wine_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +59,7 @@ public class WineListActivity extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.wine_list);
         assert recyclerView != null;
         final WineListAdapter lListAdapter = new WineListAdapter(this, mTwoPane);
-        recyclerView.setAdapter(new WineListAdapter(this,mTwoPane));
+        recyclerView.setAdapter(lListAdapter);
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         mWineViewModel = ViewModelProviders.of(this).get(WineViewModel.class);
