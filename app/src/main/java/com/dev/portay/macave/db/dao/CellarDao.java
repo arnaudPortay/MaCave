@@ -18,8 +18,6 @@ public interface CellarDao
     @Query("DELETE FROM cellar_table")
     void deleteAll();
 
-    //@Query("SELECT * FROM cellar_table, wine_table WHERE cellar_table.wine_id=wine_table.mId")
-    // TODO: Check the above query validity and replace the query below with it
     @Query("SELECT * FROM cellar_table")
     LiveData<List<CellarItem>> getCellarBottles();
 }

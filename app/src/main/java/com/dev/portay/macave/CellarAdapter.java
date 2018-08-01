@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dev.portay.macave.db.entity.CellarItem;
+import com.dev.portay.macave.db.entity.Wine;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHolder>
 {
@@ -29,7 +32,8 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     }
 
     /* *************  MEMBERS  ************* */
-    private List<CellarItem> mWines; //Cached Copy
+    private List<CellarItem> mCellarItems; //Cached Copy
+    private Map<Integer, Wine> mWines;
     private final CellarListActivity mParentActivity;
     private final boolean mTwoPane;
 
@@ -38,6 +42,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     {
         this.mParentActivity = pParentActivity;
         this.mTwoPane = pTwoPane;
+        mWines = new HashMap<>();
     }
 
     @NonNull
@@ -53,34 +58,41 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     @Override
     public void onBindViewHolder(@NonNull WineViewHolder pHolder, int pPosition)
     {
-        if (mWines != null)
+        if (mCellarItems != null && mWines.get(mCellarItems.get(pPosition).getWineId()) != null)
         {
-            Log.d("ARNAUD", "onBindViewHolder not null");
-            String lNumber = String.format("%d", mWines.get(pPosition).getId());
-            pHolder.mWineItemView.setText(lNumber);
-            String lYear = String.format("%d", mWines.get(pPosition).getYear());
-            pHolder.mWineContentView.setText(lYear);
+            String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
+            pHolder.mWineContentView.setText(lNumber);
+            pHolder.mWineItemView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
+
         }
         else
         {
-            Log.d("ARNAUD", "onBindViewHolder null");
             // Data not ready yet
             pHolder.mWineItemView.setText("");
             pHolder.mWineContentView.setText("No Wine");
         }
     }
 
-    void setWines(List<CellarItem> pWines)
+    void setCellarItems(List<CellarItem> pWines)
     {
-        Log.d("ARNAUD", "Adapter set wines");
-        mWines = pWines;
+        mCellarItems = pWines;
+        notifyDataSetChanged();
+    }
+
+    void setWines(List<Wine> pWines)
+    {
+        //mWines = pWines;
+        for (Wine wine: pWines )
+        {
+            mWines.put(wine.getId(),wine);
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount()
     {
-        return (mWines == null) ? 0 : mWines.size();
+        return (mCellarItems == null) ? 0 : mCellarItems.size();
     }
 
     //TODO: Adapt this ish

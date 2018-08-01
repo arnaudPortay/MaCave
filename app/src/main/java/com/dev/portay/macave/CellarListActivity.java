@@ -9,10 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 
 import com.dev.portay.macave.db.entity.CellarItem;
+import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
 
@@ -32,6 +32,7 @@ public class CellarListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private CellarViewModel mCellarViewModel;
+    private WineViewModel mWineViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class CellarListActivity extends AppCompatActivity {
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         mCellarViewModel = ViewModelProviders.of(this).get(CellarViewModel.class);
+        mWineViewModel = ViewModelProviders.of(this).get(WineViewModel.class);
 
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
@@ -75,7 +77,15 @@ public class CellarListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable final List<CellarItem> pWines)
             {
-                Log.d("ARNAUD", "On Changed");
+                lListAdapter.setCellarItems(pWines);
+            }
+        });
+
+        mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
+        {
+            @Override
+            public void onChanged(@Nullable final List<Wine> pWines)
+            {
                 lListAdapter.setWines(pWines);
             }
         });
