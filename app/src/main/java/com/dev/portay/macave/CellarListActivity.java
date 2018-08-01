@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
+
+import com.dev.portay.macave.db.entity.CellarItem;
 
 import java.util.List;
 
@@ -21,19 +24,19 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class WineListActivity extends AppCompatActivity {
+public class CellarListActivity extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
-    private  WineViewModel mWineViewModel;
+    private CellarViewModel mCellarViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wine_list);
+        setContentView(R.layout.activity_cellar_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,20 +61,21 @@ public class WineListActivity extends AppCompatActivity {
 
         final RecyclerView recyclerView = findViewById(R.id.wine_list);
         assert recyclerView != null;
-        final WineListAdapter lListAdapter = new WineListAdapter(this, mTwoPane);
+        final CellarAdapter lListAdapter = new CellarAdapter(this, mTwoPane);
         recyclerView.setAdapter(lListAdapter);
 
         // Get a new or existing ViewModel from the ViewModelProvider.
-        mWineViewModel = ViewModelProviders.of(this).get(WineViewModel.class);
+        mCellarViewModel = ViewModelProviders.of(this).get(CellarViewModel.class);
 
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
+        mCellarViewModel.getAllCellarItems().observe(this, new Observer<List<CellarItem>>()
         {
             @Override
-            public void onChanged(@Nullable final List<Wine> pWines)
+            public void onChanged(@Nullable final List<CellarItem> pWines)
             {
+                Log.d("ARNAUD", "On Changed");
                 lListAdapter.setWines(pWines);
             }
         });

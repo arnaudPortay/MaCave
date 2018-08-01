@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dev.portay.macave.dummy.DummyContent;
-
 /**
  * A fragment representing a single Wine detail screen.
- * This fragment is either contained in a {@link WineListActivity}
+ * This fragment is either contained in a {@link CellarListActivity}
  * in two-pane mode (on tablets) or a {@link WineDetailActivity}
  * on handsets.
  */
@@ -59,7 +57,7 @@ public class WineDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.wine_detail, container, false);
+        View rootView = inflater.inflate(R.layout.cellar_item_detail, container, false);
 
         // Show the dummy content as text in a TextView.
         //if (mItem != null) {

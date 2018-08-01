@@ -4,20 +4,22 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
+import com.dev.portay.macave.db.entity.Wine;
+
 import java.util.List;
 
 public class WineViewModel extends AndroidViewModel
 {
-    /************** MEMBERS **************/
+    /* ************* MEMBERS ************* */
 
-    private WineRepository mRepository;
+    private DataRepository mRepository;
     private LiveData<List<Wine>> mWines;
 
-    /************** FUNCTIONS **************/
+    /* ************* FUNCTIONS ************* */
     public WineViewModel(Application pApplication)
     {
         super(pApplication);
-        mRepository = new WineRepository(pApplication);
+        mRepository = DataRepository.getDataRepository(pApplication);
         mWines = mRepository.getAllWines();
     }
 
@@ -28,7 +30,7 @@ public class WineViewModel extends AndroidViewModel
 
     public void insert(Wine pWine)
     {
-        mRepository.insert(pWine);
+        mRepository.insertWine(pWine);
     }
 
 

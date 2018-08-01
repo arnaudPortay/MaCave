@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.dev.portay.macave.db.entity.Wine;
+
 import java.util.List;
 
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineViewHolder>
 {
-    /**************  INNER CLASS  **************/
+    /* *************  INNER CLASS  ************* */
     class WineViewHolder extends RecyclerView.ViewHolder
     {
         private final TextView mWineItemView;
@@ -24,13 +27,13 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
         }
     }
 
-    /**************  MEMBERS  **************/
+    /* *************  MEMBERS  ************* */
     private List<Wine> mWines; //Cached Copy
-    private final WineListActivity mParentActivity;
+    private final CellarListActivity mParentActivity;
     private final boolean mTwoPane;
 
-    /************** FUNCTIONS **************/
-    WineListAdapter(WineListActivity mParent, boolean mTwoPane)
+    /* ************* FUNCTIONS ************* */
+    WineListAdapter(CellarListActivity mParent, boolean mTwoPane)
     {
         this.mParentActivity = mParent;
         this.mTwoPane = mTwoPane;
@@ -41,7 +44,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
     public WineViewHolder onCreateViewHolder( @NonNull ViewGroup pViewGroup, int pI)
     {
         View lItemView = LayoutInflater.from(pViewGroup.getContext())
-                .inflate(R.layout.wine_list_content, pViewGroup, false);
+                .inflate(R.layout.cellar_list_content, pViewGroup, false);
 
         return new WineViewHolder(lItemView);
     }

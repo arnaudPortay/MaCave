@@ -1,4 +1,4 @@
-package com.dev.portay.macave;
+package com.dev.portay.macave.db.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -10,9 +10,9 @@ import android.arch.persistence.room.PrimaryKey;
 public class Wine
 {
 
-    /**************  MEMBERS  **************/
+    /* *************  MEMBERS  ************* */
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey/*(autoGenerate = true)*/ //TODO Uncomment when not manually populating db
     private int mId;
 
     @ColumnInfo(name = "name")
@@ -36,7 +36,7 @@ public class Wine
     /* ************* FUNCTIONS ************* */
 
     /* * Constructor * */
-    Wine(String mName, String mOrigin, String mColor, String mProducer)
+    public Wine(String mName, String mOrigin, String mColor, String mProducer)
     {
         this.mName = mName;
         this.mOrigin = mOrigin;

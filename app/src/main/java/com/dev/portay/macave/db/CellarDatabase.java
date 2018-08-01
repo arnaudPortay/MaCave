@@ -1,5 +1,7 @@
-package com.dev.portay.macave;
+package com.dev.portay.macave.db;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -7,13 +9,23 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
-@Database(entities = {Wine.class}, version = 1)
+import com.dev.portay.macave.db.dao.CellarDao;
+import com.dev.portay.macave.db.dao.WineDao;
+import com.dev.portay.macave.db.entity.CellarItem;
+import com.dev.portay.macave.db.entity.Wine;
+
+import java.util.List;
+
+@Database(entities = {Wine.class, CellarItem.class}, version = 1)
 public abstract class CellarDatabase extends RoomDatabase
 {
 
     /************** MEMBERS **************/
     public abstract WineDao mWineDao();
+    public abstract CellarDao mCellarDao();
 
     private static CellarDatabase smInstance;
 
@@ -52,22 +64,61 @@ public abstract class CellarDatabase extends RoomDatabase
     // TODO: Delete later
     private static class PopulateDBAsync extends AsyncTask<Void, Void, Void>
     {
-        private final WineDao mDao;
+        private final WineDao mWineDao;
+        private final CellarDao mCellarDao;
+
         PopulateDBAsync(CellarDatabase pDb)
         {
-            mDao = pDb.mWineDao();
+            mWineDao = pDb.mWineDao();
+            mCellarDao = pDb.mCellarDao();
         }
 
         @Override
         protected Void doInBackground(final Void... pParams)
         {
-            mDao.deleteAll();
+            mWineDao.deleteAll();
+            mCellarDao.deleteAll();
+
             Wine lW1 = new Wine("toto", "bourgogne", "red","titi");
-            mDao.insert(lW1);
+            lW1.setId(525);
+            mWineDao.insert(lW1);
             Wine lW2 = new Wine("pore", "champange", "blue","ta mère");
-            mDao.insert(lW2);
+            lW2.setId(526);
+            mWineDao.insert(lW2);
             Wine lW3 = new Wine("aae", "bordeaux", "white","lalili");
-            mDao.insert(lW3);
+            lW3.setId(527);
+            mWineDao.insert(lW3);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            new PopulateDBAsyncNext(mCellarDao).execute();
+        }
+    }
+
+    // TODO: Delete later
+    private static class PopulateDBAsyncNext extends AsyncTask<Void, Void, Void>
+    {
+        private CellarDao mCellarDao;
+
+        PopulateDBAsyncNext(CellarDao pCellarDao)
+        {
+            this.mCellarDao = pCellarDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            CellarItem lC1 = new CellarItem(525, 1990, 3);
+            mCellarDao.insert(lC1);
+
+            CellarItem lC2 = new CellarItem(526, 888, 1);
+            mCellarDao.insert(lC2);
+            CellarItem lC3 = new CellarItem(527, 1992, 6);
+            mCellarDao.insert(lC3);
             return null;
         }
     }
