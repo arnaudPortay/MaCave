@@ -42,7 +42,7 @@ public class DataRepository
         }
         return msInstance;
     }
-
+    
     private DataRepository(Application pApplication)
     {
         CellarDatabase lDatabase = CellarDatabase.getInstance(pApplication);
@@ -85,6 +85,12 @@ public class DataRepository
             mAsyncTaskDao.insert(params[0]);
             return null;
         }
+    }
+
+    //Wrapper
+    LiveData<List<CellarItem>> getCellarItemById(final int pId)
+    {
+        return mCellarDao.getItemById(pId);
     }
 
     //Wrapper

@@ -1,8 +1,10 @@
 package com.dev.portay.macave;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
             pHolder.mWineContentView.setText(lNumber);
             pHolder.mWineItemView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
+            pHolder.itemView.setTag(mCellarItems.get(pPosition).getId());
 
         }
         else
@@ -71,6 +74,8 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             pHolder.mWineItemView.setText("");
             pHolder.mWineContentView.setText("No Wine");
         }
+
+        pHolder.itemView.setOnClickListener(mOnClickListener);
     }
 
     void setCellarItems(List<CellarItem> pWines)
@@ -81,7 +86,6 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
 
     void setWines(List<Wine> pWines)
     {
-        //mWines = pWines;
         for (Wine wine: pWines )
         {
             mWines.put(wine.getId(),wine);
@@ -95,27 +99,26 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
         return (mCellarItems == null) ? 0 : mCellarItems.size();
     }
 
-    //TODO: Adapt this ish
-//    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-//            if (mTwoPane) {
-//                Bundle arguments = new Bundle();
-//                arguments.putString(WineDetailFragment.ARG_ITEM_ID, item.id);
-//                WineDetailFragment fragment = new WineDetailFragment();
-//                fragment.setArguments(arguments);
-//                mParentActivity.getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.wine_detail_container, fragment)
-//                        .commit();
-//            } else {
-//                Context context = view.getContext();
-//                Intent intent = new Intent(context, WineDetailActivity.class);
-//                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, item.id);
-//
-//                context.startActivity(intent);
-//            }
-//        }
-//    };
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
+                WineDetailFragment fragment = new WineDetailFragment();
+                fragment.setArguments(arguments);
+                mParentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.wine_detail_container, fragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, WineDetailActivity.class);
+                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
+
+                context.startActivity(intent);
+            }
+        }
+    };
 
 }

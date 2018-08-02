@@ -28,10 +28,13 @@ public class WineViewModel extends AndroidViewModel
         return mWines;
     }
 
+    LiveData<List<Wine>> getWineById(int pId)
+    {
+        return mRepository.getWineById(pId);
+    }
+
     public void insert(Wine pWine)
     {
         mRepository.insertWine(pWine);
     }
-
-
 }

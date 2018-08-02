@@ -28,6 +28,11 @@ public class CellarViewModel extends AndroidViewModel
         return mCellarItems;
     }
 
+    LiveData<List<CellarItem>> getCellarItemById(int pId)
+    {
+        return mRepository.getCellarItemById(pId);
+    }
+
     public void insert(CellarItem pCellarItem)
     {
         mRepository.insertCellarItem(pCellarItem);

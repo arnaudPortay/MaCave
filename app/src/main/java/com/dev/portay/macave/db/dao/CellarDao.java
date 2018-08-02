@@ -20,4 +20,7 @@ public interface CellarDao
 
     @Query("SELECT * FROM cellar_table")
     LiveData<List<CellarItem>> getCellarBottles();
+
+    @Query("SELECT * FROM cellar_table WHERE mId=:pId")
+    LiveData<List<CellarItem>> getItemById(int pId);
 }

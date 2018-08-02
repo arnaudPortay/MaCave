@@ -50,12 +50,14 @@ public class WineDetailActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
+        //TODO: Check if it's better to add wine id as an extra rather than getting it again from the cellar...
+        // TODO: If so then do the same when creating fragment in CellarAdapter
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(WineDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(WineDetailFragment.ARG_ITEM_ID));
+            arguments.putInt(WineDetailFragment.ARG_ITEM_ID,
+                    getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1));
             WineDetailFragment fragment = new WineDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
