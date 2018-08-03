@@ -29,10 +29,8 @@ public class WineDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_WINE_ID = "wine_id";
 
-
-    // NEVER EVER REASSIGN THIS DURING FRAGMENT LIFECYCLE ! Dirty Hack...
-    private WineDetailFragment mInstance;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -45,9 +43,8 @@ public class WineDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mInstance = this;
 
-        if (getArguments().containsKey(ARG_ITEM_ID))
+        if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_WINE_ID))
         {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -67,23 +64,21 @@ public class WineDetailFragment extends Fragment {
 
                                 ((TextView) getView().findViewById(R.id.wine_detail)).
                                         setText(String.format("%d",cellarItems.get(0).getWineId()));
+                            }
+                        }
+                    });
 
-                                // The nested observers is probably a bad idea performance wise...
-                                // TODO: remove potential previous observers before adding it?
-                                ViewModelProviders.of(mInstance).get(WineViewModel.class)
-                                        .getWineById(cellarItems.get(0).getWineId())
-                                        .observe(mInstance, new Observer<List<Wine>>()
-                                        {
-                                            @Override
-                                            public void onChanged(@Nullable List<Wine> wines)
-                                            {
-                                                if (wines != null && wines.size() > 0)
-                                                {
-                                                    ((CollapsingToolbarLayout)getActivity().findViewById(R.id.toolbar_layout))
-                                                            .setTitle(wines.get(0).getName());
-                                                }
-                                            }
-                                        });
+            ViewModelProviders.of(this).get(WineViewModel.class)
+                    .getWineById(getArguments().getInt(ARG_WINE_ID))
+                    .observe(this, new Observer<List<Wine>>()
+                    {
+                        @Override
+                        public void onChanged(@Nullable List<Wine> wines)
+                        {
+                            if (wines != null && wines.size() > 0)
+                            {
+                                ((CollapsingToolbarLayout)getActivity().findViewById(R.id.toolbar_layout))
+                                        .setTitle(wines.get(0).getName());
                             }
                         }
                     });

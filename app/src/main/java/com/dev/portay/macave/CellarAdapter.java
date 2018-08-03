@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +66,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
             pHolder.mWineContentView.setText(lNumber);
             pHolder.mWineItemView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
-            pHolder.itemView.setTag(mCellarItems.get(pPosition).getId());
-
+            pHolder.itemView.setTag(new Pair<>(mCellarItems.get(pPosition).getId(),mCellarItems.get(pPosition).getWineId()));
         }
         else
         {
@@ -105,7 +105,8 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
 
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
+                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, ((Pair<Integer,Integer>)view.getTag()).first);
+                arguments.putInt(WineDetailFragment.ARG_WINE_ID, ((Pair<Integer,Integer>)view.getTag()).second);
                 WineDetailFragment fragment = new WineDetailFragment();
                 fragment.setArguments(arguments);
                 mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -114,7 +115,8 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, WineDetailActivity.class);
-                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
+                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, ((Pair<Integer,Integer>)view.getTag()).first);
+                intent.putExtra(WineDetailFragment.ARG_WINE_ID, ((Pair<Integer,Integer>)view.getTag()).second);
 
                 context.startActivity(intent);
             }

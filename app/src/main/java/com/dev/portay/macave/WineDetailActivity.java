@@ -58,6 +58,8 @@ public class WineDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putInt(WineDetailFragment.ARG_ITEM_ID,
                     getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1));
+            arguments.putInt(WineDetailFragment.ARG_WINE_ID,
+                    getIntent().getIntExtra(WineDetailFragment.ARG_WINE_ID,-1));
             WineDetailFragment fragment = new WineDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
