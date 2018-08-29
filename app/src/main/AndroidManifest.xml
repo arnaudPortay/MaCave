@@ -28,6 +28,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dev.portay.macave.CellarListActivity" />
         </activity>
+        <activity android:name=".AddWineActivity"></activity>
     </application>
 
 </manifest>
