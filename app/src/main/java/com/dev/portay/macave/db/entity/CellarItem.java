@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 @Entity(tableName = "cellar_table",
         foreignKeys =
@@ -16,7 +18,7 @@ import android.arch.persistence.room.PrimaryKey;
                 },
         indices = { @Index(value = "wine_id")}
         )
-public class CellarItem
+public class CellarItem implements Parcelable
 {
     /* *************  MEMBERS  ************* */
     @PrimaryKey(autoGenerate = true)
@@ -32,6 +34,43 @@ public class CellarItem
     private int mBottleNumber;
 
     /* ************* FUNCTIONS ************* */
+
+    /* * Parcelable Interface * */
+    public CellarItem(Parcel pIn)
+    {
+        mId = pIn.readInt();
+        mYear = pIn.readInt();
+        mWineId = pIn.readInt();
+        mBottleNumber = pIn.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i)
+    {
+        parcel.writeInt(mId);
+        parcel.writeInt(mYear);
+        parcel.writeInt(mWineId);
+        parcel.writeInt(mBottleNumber);
+    }
+
+    public static final Parcelable.Creator<CellarItem> CREATOR = new Parcelable.Creator<CellarItem>()
+    {
+        public CellarItem createFromParcel(Parcel pIn)
+        {
+            return new CellarItem(pIn);
+        }
+
+        public CellarItem[] newArray(int pSize)
+        {
+            return new CellarItem[pSize];
+        }
+    };
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 
     /* * Constructor * */
     public CellarItem(int mWineId, int mYear, int mBottleNumber)

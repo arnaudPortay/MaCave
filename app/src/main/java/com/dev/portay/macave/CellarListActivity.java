@@ -44,7 +44,9 @@ public class CellarListActivity extends AppCompatActivity {
 
         if (requestCode == ADD_WINE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            Snackbar.make(findViewById(R.id.fab), "Replace with your own action", Snackbar.LENGTH_LONG)
+            Wine lWine = data.getParcelableExtra(AddWineActivity.WINE_REPLY);
+            CellarItem lCellarItem = data.getParcelableExtra(AddWineActivity.CELLAR_ITEM_REPLY);
+            Snackbar.make(findViewById(R.id.fab), lWine.getName() + " " + lCellarItem.getYear(), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
     }
