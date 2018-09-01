@@ -25,12 +25,14 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     {
         private final TextView mWineNameView;
         private final TextView mWineYearView;
+        private final TextView mWineRegionView;
 
         private WineViewHolder(View pItemView)
         {
             super(pItemView);
             mWineNameView =  pItemView.findViewById(R.id.name_text);
             mWineYearView = pItemView.findViewById(R.id.year_text);
+            mWineRegionView = pItemView.findViewById(R.id.region_text);
         }
     }
 
@@ -63,16 +65,36 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     {
         if (mCellarItems != null && mWines.get(mCellarItems.get(pPosition).getWineId()) != null)
         {
+            // Set Year
             String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
             pHolder.mWineYearView.setText(lNumber);
-            pHolder.mWineNameView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
+
+            // Set name or hide
+            String lName = mWines.get(mCellarItems.get(pPosition).getWineId()).getName();
+            if (lName == null || lName.isEmpty())
+            {
+                pHolder.mWineNameView.setVisibility(View.GONE);
+            }
+            else
+            {
+                pHolder.mWineNameView.setVisibility(View.VISIBLE);
+                pHolder.mWineNameView.setText(lName);
+            }
+
+            //Set region or hide
+            String lRegion = mWines.get(mCellarItems.get(pPosition).getWineId()).getOrigin();
+            if (lRegion == null || lRegion.isEmpty())
+            {
+                pHolder.mWineRegionView.setVisibility(View.GONE);
+            }
+            else
+            {
+                pHolder.mWineRegionView.setVisibility(View.VISIBLE);
+                pHolder.mWineRegionView.setText(lRegion);
+            }
+
+            // Set Tag
             pHolder.itemView.setTag(new Pair<>(mCellarItems.get(pPosition).getId(),mCellarItems.get(pPosition).getWineId()));
-        }
-        else
-        {
-            // Data not ready yet
-            pHolder.mWineNameView.setText("");
-            pHolder.mWineYearView.setText("No Wine");
         }
 
         pHolder.itemView.setOnClickListener(mOnClickListener);
