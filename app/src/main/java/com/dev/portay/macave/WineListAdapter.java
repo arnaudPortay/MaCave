@@ -22,8 +22,8 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
         private WineViewHolder(View pItemView)
         {
             super(pItemView);
-            mWineItemView =  pItemView.findViewById(R.id.id_text);
-            mWineContentView = pItemView.findViewById(R.id.content);
+            mWineItemView =  pItemView.findViewById(R.id.name_text);
+            mWineContentView = pItemView.findViewById(R.id.year_text);
         }
     }
 

@@ -23,14 +23,14 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     /* *************  INNER CLASS  ************* */
     class WineViewHolder extends RecyclerView.ViewHolder
     {
-        private final TextView mWineItemView;
-        private final TextView mWineContentView;
+        private final TextView mWineNameView;
+        private final TextView mWineYearView;
 
         private WineViewHolder(View pItemView)
         {
             super(pItemView);
-            mWineItemView =  pItemView.findViewById(R.id.id_text);
-            mWineContentView = pItemView.findViewById(R.id.content);
+            mWineNameView =  pItemView.findViewById(R.id.name_text);
+            mWineYearView = pItemView.findViewById(R.id.year_text);
         }
     }
 
@@ -64,15 +64,15 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
         if (mCellarItems != null && mWines.get(mCellarItems.get(pPosition).getWineId()) != null)
         {
             String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
-            pHolder.mWineContentView.setText(lNumber);
-            pHolder.mWineItemView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
+            pHolder.mWineYearView.setText(lNumber);
+            pHolder.mWineNameView.setText(mWines.get(mCellarItems.get(pPosition).getWineId()).getName());
             pHolder.itemView.setTag(new Pair<>(mCellarItems.get(pPosition).getId(),mCellarItems.get(pPosition).getWineId()));
         }
         else
         {
             // Data not ready yet
-            pHolder.mWineItemView.setText("");
-            pHolder.mWineContentView.setText("No Wine");
+            pHolder.mWineNameView.setText("");
+            pHolder.mWineYearView.setText("No Wine");
         }
 
         pHolder.itemView.setOnClickListener(mOnClickListener);
