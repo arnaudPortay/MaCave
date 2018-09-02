@@ -22,6 +22,7 @@ public class CellarItem implements Parcelable
 {
     /* *************  MEMBERS  ************* */
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo( name = "id")
     private int mId;
 
     @ColumnInfo(name = "year")

@@ -45,6 +45,11 @@ public abstract class CellarDatabase extends RoomDatabase
         return smInstance;
     }
 
+    public static  CellarDatabase getInstance()
+    {
+        return smInstance;
+    }
+
     // TODO: Delete later
     private  static  CellarDatabase.Callback sCellarDatabaseCallback =
             new CellarDatabase.Callback()

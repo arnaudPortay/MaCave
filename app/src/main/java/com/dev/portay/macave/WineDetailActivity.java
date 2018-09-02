@@ -1,15 +1,19 @@
 package com.dev.portay.macave;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.dev.portay.macave.db.CellarDatabase;
 
 /**
  * An activity representing a single Wine detail screen. This
@@ -30,8 +34,15 @@ public class WineDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                // get relevant data
+                int lNumber = Integer.parseInt(((TextView)findViewById(R.id.number_detail)).getText().toString());
+                int lId = getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1);
+
+                // update bottle number
+                new updateDBAsync(lNumber, lId).execute();
+
+                // Navigate back to CellarList Activity
+                NavUtils.navigateUpTo((Activity)view.getContext(), new Intent(view.getContext(), CellarListActivity.class));
             }
         });
 
@@ -56,12 +67,16 @@ public class WineDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+
             arguments.putInt(WineDetailFragment.ARG_ITEM_ID,
                     getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1));
+
             arguments.putInt(WineDetailFragment.ARG_WINE_ID,
                     getIntent().getIntExtra(WineDetailFragment.ARG_WINE_ID,-1));
+
             WineDetailFragment fragment = new WineDetailFragment();
             fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.wine_detail_container, fragment)
                     .commit();
@@ -85,3 +100,24 @@ public class WineDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+// Utility class
+class updateDBAsync extends AsyncTask<Void, Void, Void>
+{
+    private final int mNumber;
+    private final int mId;
+
+    updateDBAsync(int pNumber, int pId)
+    {
+        mNumber = pNumber;
+        mId = pId;
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids)
+    {
+        CellarDatabase.getInstance().mCellarDao().updateBottleNumber(mNumber, mId);
+        return null;
+    }
+}
+

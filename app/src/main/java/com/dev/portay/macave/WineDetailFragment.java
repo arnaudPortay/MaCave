@@ -2,10 +2,10 @@ package com.dev.portay.macave;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,14 +56,45 @@ public class WineDetailFragment extends Fragment {
                     .observe(this, new Observer<List<CellarItem>>()
                     {
                         @Override
-                        public void onChanged(@Nullable List<CellarItem> cellarItems)
+                        public void onChanged(@Nullable final List<CellarItem> cellarItems)
                         {
 
                             if (cellarItems != null && cellarItems.size() > 0)
                             {
+                                // Set Year
+                                ((TextView) getView().findViewById(R.id.year_detail)).
+                                        setText(String.format("%d",cellarItems.get(0).getYear()));
 
-                                ((TextView) getView().findViewById(R.id.wine_detail)).
-                                        setText(String.format("%d",cellarItems.get(0).getWineId()));
+                                // Set Bottle Number
+                                ((TextView) getView().findViewById(R.id.number_detail)).
+                                        setText(String.format("%d",cellarItems.get(0).getBottleNumber()));
+
+                                // Increase button listener
+                                getView().findViewById(R.id.increase_button).setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        TextView lView = getView().findViewById(R.id.number_detail);
+                                        String lVal = lView.getText().toString();
+                                        lView.setText(String.format("%d", Integer.parseInt(lVal) + 1));
+                                    }
+                                });
+
+                                // Decrease button listener
+                                getView().findViewById(R.id.decrease_button).setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        TextView lView = getView().findViewById(R.id.number_detail);
+                                        int lVal = Integer.parseInt(lView.getText().toString());
+                                        if (lVal != 0)
+                                        {
+                                            lView.setText(String.format("%d", lVal - 1));
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
@@ -77,8 +108,18 @@ public class WineDetailFragment extends Fragment {
                         {
                             if (wines != null && wines.size() > 0)
                             {
+                                // Set Title
                                 ((CollapsingToolbarLayout)getActivity().findViewById(R.id.toolbar_layout))
                                         .setTitle(wines.get(0).getName());
+
+                                // Set Region
+                                ((TextView) getView().findViewById(R.id.region_detail)).
+                                        setText(wines.get(0).getOrigin());
+
+                                // Set Producer
+                                ((TextView) getView().findViewById(R.id.producer_detail)).
+                                        setText(wines.get(0).getProducer());
+
                             }
                         }
                     });
@@ -90,4 +131,5 @@ public class WineDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.cellar_item_detail, container, false);
     }
+
 }

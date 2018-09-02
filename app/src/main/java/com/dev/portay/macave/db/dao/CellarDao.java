@@ -21,6 +21,9 @@ public interface CellarDao
     @Query("SELECT * FROM cellar_table")
     LiveData<List<CellarItem>> getCellarBottles();
 
-    @Query("SELECT * FROM cellar_table WHERE mId=:pId")
+    @Query("SELECT * FROM cellar_table WHERE id=:pId")
     LiveData<List<CellarItem>> getItemById(int pId);
+
+    @Query("UPDATE cellar_table SET bottle_number = :pNumber WHERE id = :pId")
+    void updateBottleNumber(int pNumber, int pId);
 }
