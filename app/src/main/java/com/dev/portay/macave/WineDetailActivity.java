@@ -1,10 +1,10 @@
 package com.dev.portay.macave;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,15 +34,8 @@ public class WineDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get relevant data
-                int lNumber = Integer.parseInt(((TextView)findViewById(R.id.number_detail)).getText().toString());
-                int lId = getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1);
-
-                // update bottle number
-                new updateDBAsync(lNumber, lId).execute();
-
-                // Navigate back to CellarList Activity
-                NavUtils.navigateUpTo((Activity)view.getContext(), new Intent(view.getContext(), CellarListActivity.class));
+                Snackbar.make(view, "Make this an edit button ?", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -86,7 +79,7 @@ public class WineDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
+        if (id == android.R.id.home || id == android.R.id.closeButton) {
             // This ID represents the Home or Up button. In the case of this
             // activity, the Up button is shown. Use NavUtils to allow users
             // to navigate up one level in the application structure. For
@@ -94,10 +87,29 @@ public class WineDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+
+            updateBottleNumber();
             NavUtils.navigateUpTo(this, new Intent(this, CellarListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        updateBottleNumber();
+        super.onBackPressed();
+    }
+
+    private void updateBottleNumber()
+    {
+        // get relevant data
+        int lNumber = Integer.parseInt(((TextView)findViewById(R.id.number_detail)).getText().toString());
+        int lId = getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1);
+
+        // update bottle number
+        new updateDBAsync(lNumber, lId).execute();
     }
 }
 
