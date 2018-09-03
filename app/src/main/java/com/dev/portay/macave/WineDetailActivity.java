@@ -1,7 +1,6 @@
 package com.dev.portay.macave;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.dev.portay.macave.db.CellarDatabase;
 
 /**
  * An activity representing a single Wine detail screen. This
@@ -109,27 +106,7 @@ public class WineDetailActivity extends AppCompatActivity {
         int lId = getIntent().getIntExtra(WineDetailFragment.ARG_ITEM_ID,-1);
 
         // update bottle number
-        new updateDBAsync(lNumber, lId).execute();
-    }
-}
-
-// Utility class
-class updateDBAsync extends AsyncTask<Void, Void, Void>
-{
-    private final int mNumber;
-    private final int mId;
-
-    updateDBAsync(int pNumber, int pId)
-    {
-        mNumber = pNumber;
-        mId = pId;
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids)
-    {
-        CellarDatabase.getInstance().mCellarDao().updateBottleNumber(mNumber, mId);
-        return null;
+        DataRepository.getDataRepository().updateBottleNumber(lNumber, lId);
     }
 }
 

@@ -42,7 +42,12 @@ public class DataRepository
         }
         return msInstance;
     }
-    
+
+    public static DataRepository getDataRepository()
+    {
+        return msInstance;
+    }
+
     private DataRepository(Application pApplication)
     {
         CellarDatabase lDatabase = CellarDatabase.getInstance(pApplication);
@@ -98,6 +103,7 @@ public class DataRepository
     {
         return mCellarItems;
     }
+
     public void insertCellarItem(CellarItem pCellarItem)
     {
         new insertCellarItemAsyncTask(mCellarDao).execute(pCellarItem);
@@ -115,6 +121,32 @@ public class DataRepository
         protected Void doInBackground(final CellarItem... cellarItems)
         {
             mAsyncTaskDao.insert(cellarItems[0]);
+            return null;
+        }
+    }
+
+    public void updateBottleNumber(int pNumber, int pId)
+    {
+        new updateBottleNumberAsyncTask(mCellarDao, pId, pNumber).execute();
+    }
+
+    private static class updateBottleNumberAsyncTask extends  AsyncTask<Void, Void, Void>
+    {
+        private CellarDao mAsyncTaskDao;
+        private int mId;
+        private int mNumber;
+
+        updateBottleNumberAsyncTask(CellarDao pDao, int pId, int pNumber)
+        {
+            mAsyncTaskDao = pDao;
+            mId = pId;
+            mNumber = pNumber;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            mAsyncTaskDao.updateBottleNumber(mNumber, mId);
             return null;
         }
     }
