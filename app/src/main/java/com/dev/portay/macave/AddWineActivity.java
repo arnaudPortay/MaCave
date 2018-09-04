@@ -1,8 +1,8 @@
 package com.dev.portay.macave;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -10,8 +10,6 @@ import android.widget.EditText;
 
 import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
-
-import java.util.Date;
 
 public class AddWineActivity extends AppCompatActivity
 {
@@ -48,7 +46,7 @@ public class AddWineActivity extends AppCompatActivity
                     String lName = mEditWineNameView.getText().toString();
                     String lYear = mEditWineYearView.getText().toString();
 
-                    lReplyIntent.putExtra(WINE_REPLY, new Wine(lName,"bordeaux","red","test"));
+                    lReplyIntent.putExtra(WINE_REPLY, new Wine(lName,"bordeaux", Wine.WineColor.ePaille,"test"));
                     lReplyIntent.putExtra(CELLAR_ITEM_REPLY, new CellarItem(-1, Integer.parseInt(lYear), 12));
 
                     setResult(RESULT_OK, lReplyIntent);

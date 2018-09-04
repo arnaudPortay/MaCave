@@ -3,6 +3,7 @@ package com.dev.portay.macave.db.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,7 +25,8 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     private String mOrigin; // Either the country or a more specific region eg: Bourgogne
 
     @ColumnInfo(name = "color")
-    private String mColor; // White - Red - Rosé
+    @TypeConverters(WineColorConverter.class)
+    private WineColor mColor;
 
     @ColumnInfo(name = "producer")
     private String mProducer;
@@ -32,8 +34,33 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     // TODO: Add the labelUri getters & setters and uncomment import statement
     //@ColumnInfo(name = "labelPath")
     //private URI mLabelPath;
-
     //TODO: Checkout the @Ignore statement to use with an image ( https://developer.android.com/training/data-storage/room/defining-data )
+
+
+    // Enum for wine color
+    public enum WineColor
+    {
+        eRed(0),
+        eWhite(1),
+        eRose(2),
+        ePaille(3),
+        eSparkling(4),
+        eCremant(5),
+        eChampagne(6),
+        eChampagneRose(7);
+
+        private int mCode;
+
+        WineColor(int pCode)
+        {
+            this.mCode = pCode;
+        }
+
+        public int getCode()
+        {
+            return  mCode;
+        }
+    }
 
     /* ************* FUNCTIONS ************* */
 
@@ -42,7 +69,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     {
         mId = pIn.readInt();
         mName = pIn.readString();
-        mColor = pIn.readString();
+        mColor = (WineColor)pIn.readSerializable();
         mProducer = pIn.readString();
     }
 
@@ -51,7 +78,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     {
         parcel.writeInt(mId);
         parcel.writeString(mName);
-        parcel.writeString(mColor);
+        parcel.writeSerializable(mColor);
         parcel.writeString(mProducer);
     }
 
@@ -75,7 +102,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     }
 
     /* * Constructor * */
-    public Wine(String mName, String mOrigin, String mColor, String mProducer)
+    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer)
     {
         this.mName = mName;
         this.mOrigin = mOrigin;
@@ -114,12 +141,12 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         this.mOrigin = pOrigin;
     }
 
-    public String getColor()
+    public WineColor getColor()
     {
         return mColor;
     }
 
-    public void setColor(String pColor)
+    public void setColor(WineColor pColor)
     {
         this.mColor = pColor;
     }

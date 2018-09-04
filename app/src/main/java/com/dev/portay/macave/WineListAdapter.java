@@ -77,27 +77,4 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineVi
         mWines = pWines;
         notifyDataSetChanged();
     }
-
-    //TODO: Adapt this ish
-//    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-//            if (mTwoPane) {
-//                Bundle arguments = new Bundle();
-//                arguments.putString(WineDetailFragment.ARG_ITEM_ID, item.id);
-//                WineDetailFragment fragment = new WineDetailFragment();
-//                fragment.setArguments(arguments);
-//                mParentActivity.getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.wine_detail_container, fragment)
-//                        .commit();
-//            } else {
-//                Context context = view.getContext();
-//                Intent intent = new Intent(context, WineDetailActivity.class);
-//                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, item.id);
-//
-//                context.startActivity(intent);
-//            }
-//        }
-//    };
 }

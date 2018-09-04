@@ -4,4 +4,13 @@
     <string name="number_bottle">N° Bouteilles:</string>
     <string name="add_bottle_desc">Ajouter une bouteille</string>
     <string name="remove_bottle_desc">Enlever une bouteille</string>
+    <string name="wine_red">Rouge</string>
+    <string name="wine_rose">Rosé</string>
+    <string name="wine_paille">Vin de Paille</string>
+    <string name="wine_sparkling">Mousseux</string>
+    <string name="wine_cremant">Crémant</string>
+    <string name="wine_champagne">Champagne</string>
+    <string name="wine_white">Blanc</string>
+    <string name="wine_champagne_rose">Champagne Rosé</string>
+    <string name="error">Oups ! Erreur...</string>
 </resources>

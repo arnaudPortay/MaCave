@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,10 +117,51 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.region_detail)).
                                         setText(wines.get(0).getOrigin());
 
+                                //TODO: Handle cases where there is no region or name for good responsive behavior
+                                // Does not work....
+                                /*ConstraintLayout.LayoutParams lParams =
+                                        (ConstraintLayout.LayoutParams)getView().findViewById(R.id.year_detail).getLayoutParams();
+                                lParams.setMargins(0,0,0,0);
+                                getView().findViewById(R.id.year_detail).setLayoutParams(lParams);*/
+
                                 // Set Producer
                                 ((TextView) getView().findViewById(R.id.producer_detail)).
                                         setText(wines.get(0).getProducer());
 
+                                // Set Color
+                                int lId = R.string.error;
+
+                                switch (wines.get(0).getColor())
+                                {
+                                    case eRed:
+                                        lId = R.string.wine_red;
+                                        break;
+                                    case eWhite:
+                                        lId = R.string.wine_white;
+                                        break;
+                                    case eRose:
+                                        lId = R.string.wine_rose;
+                                        break;
+                                    case ePaille:
+                                        lId = R.string.wine_paille;
+                                        break;
+                                    case eSparkling:
+                                        lId = R.string.wine_sparkling;
+                                        break;
+                                    case eCremant:
+                                        lId = R.string.wine_cremant;
+                                        break;
+                                    case eChampagne:
+                                        lId = R.string.wine_champagne;
+                                        break;
+                                    case eChampagneRose:
+                                        lId = R.string.wine_champagne_rose;
+                                        break;
+                                    default:
+                                        Log.e("MACAVE", "Wrong number for Wine Color enum");
+                                        break;
+                                }
+                                ((TextView) getView().findViewById(R.id.color_detail)).setText(lId);
                             }
                         }
                     });

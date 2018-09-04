@@ -80,13 +80,13 @@ public abstract class CellarDatabase extends RoomDatabase
             mWineDao.deleteAll();
             mCellarDao.deleteAll();
 
-            Wine lW1 = new Wine("toto", "bourgogne", "red","titi");
+            Wine lW1 = new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi");
             lW1.setId(0);
             mWineDao.insert(lW1);
-            Wine lW2 = new Wine("pore", "champange", "blue","ta mère");
+            Wine lW2 = new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère");
             lW2.setId(1);
             mWineDao.insert(lW2);
-            Wine lW3 = new Wine("aae", "bordeaux", "white","lalili");
+            Wine lW3 = new Wine("aae", "bordeaux", Wine.WineColor.eChampagne,"lalili");
             lW3.setId(2);
             mWineDao.insert(lW3);
 
