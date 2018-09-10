@@ -25,4 +25,7 @@ public interface WineDao
     @Query("SELECT * FROM wine_table WHERE mId=:pId")
     LiveData<List<Wine>> getWineById(int pId);
 
+    @Query("UPDATE wine_table SET bottle_number = :pNumber WHERE mId = :pId")
+    void updateBottleNumber(int pNumber, int pId);
+
 }

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -52,23 +51,23 @@ public class WineDetailFragment extends Fragment {
             // to load content from a content provider.
             //TODO: Try and follow the above piece of advice
 
-            ViewModelProviders.of(this).get(CellarViewModel.class)
-                    .getCellarItemById(getArguments().getInt(ARG_ITEM_ID))
-                    .observe(this, new Observer<List<CellarItem>>()
+            ViewModelProviders.of(this).get(WineViewModel.class)
+                    .getWineById(getArguments().getInt(ARG_ITEM_ID))
+                    .observe(this, new Observer<List<Wine>>()
                     {
                         @Override
-                        public void onChanged(@Nullable final List<CellarItem> cellarItems)
+                        public void onChanged(@Nullable final List<Wine> wines)
                         {
 
-                            if (cellarItems != null && cellarItems.size() > 0)
+                            if (wines != null && wines.size() > 0)
                             {
                                 // Set Year
                                 ((TextView) getView().findViewById(R.id.year_detail)).
-                                        setText(String.format("%d",cellarItems.get(0).getYear()));
+                                        setText(String.format("%d",wines.get(0).getYear()));
 
                                 // Set Bottle Number
                                 ((TextView) getView().findViewById(R.id.number_detail)).
-                                        setText(String.format("%d",cellarItems.get(0).getBottleNumber()));
+                                        setText(String.format("%d",wines.get(0).getBottleNumber()));
 
                                 // Increase button listener
                                 getView().findViewById(R.id.increase_button).setOnClickListener(new View.OnClickListener()
@@ -96,19 +95,7 @@ public class WineDetailFragment extends Fragment {
                                         }
                                     }
                                 });
-                            }
-                        }
-                    });
 
-            ViewModelProviders.of(this).get(WineViewModel.class)
-                    .getWineById(getArguments().getInt(ARG_WINE_ID))
-                    .observe(this, new Observer<List<Wine>>()
-                    {
-                        @Override
-                        public void onChanged(@Nullable List<Wine> wines)
-                        {
-                            if (wines != null && wines.size() > 0)
-                            {
                                 // Set Title
                                 ((CollapsingToolbarLayout)getActivity().findViewById(R.id.toolbar_layout))
                                         .setTitle(wines.get(0).getName());

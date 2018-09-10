@@ -5,18 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHolder>
 {
@@ -37,8 +34,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     }
 
     /* *************  MEMBERS  ************* */
-    private List<CellarItem> mCellarItems; //Cached Copy
-    private Map<Integer, Wine> mWines;
+    private List<Wine> mWines; //Cached Copy
     private final CellarListActivity mParentActivity;
     private final boolean mTwoPane;
 
@@ -47,7 +43,6 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     {
         this.mParentActivity = pParentActivity;
         this.mTwoPane = pTwoPane;
-        mWines = new HashMap<>();
     }
 
     @NonNull
@@ -63,14 +58,14 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     @Override
     public void onBindViewHolder(@NonNull WineViewHolder pHolder, int pPosition)
     {
-        if (mCellarItems != null && mWines.get(mCellarItems.get(pPosition).getWineId()) != null)
+        if (mWines != null && mWines.get(pPosition) != null)
         {
             // Set Year
-            String lNumber = String.format("%d", mCellarItems.get(pPosition).getYear());
+            String lNumber = String.format("%d", mWines.get(pPosition).getYear());
             pHolder.mWineYearView.setText(lNumber);
 
             // Set name or hide
-            String lName = mWines.get(mCellarItems.get(pPosition).getWineId()).getName();
+            String lName = mWines.get(pPosition).getName();
             if (lName == null || lName.isEmpty())
             {
                 pHolder.mWineNameView.setVisibility(View.GONE);
@@ -82,7 +77,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             }
 
             //Set region or hide
-            String lRegion = mWines.get(mCellarItems.get(pPosition).getWineId()).getOrigin();
+            String lRegion = mWines.get(pPosition).getOrigin();
             if (lRegion == null || lRegion.isEmpty())
             {
                 pHolder.mWineRegionView.setVisibility(View.GONE);
@@ -94,31 +89,22 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             }
 
             // Set Tag
-            pHolder.itemView.setTag(new Pair<>(mCellarItems.get(pPosition).getId(),mCellarItems.get(pPosition).getWineId()));
+            pHolder.itemView.setTag(mWines.get(pPosition).getId());
         }
 
         pHolder.itemView.setOnClickListener(mOnClickListener);
     }
 
-    void setCellarItems(List<CellarItem> pWines)
-    {
-        mCellarItems = pWines;
-        notifyDataSetChanged();
-    }
-
     void setWines(List<Wine> pWines)
     {
-        for (Wine wine: pWines )
-        {
-            mWines.put(wine.getId(),wine);
-        }
+        mWines = pWines;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount()
     {
-        return (mCellarItems == null) ? 0 : mCellarItems.size();
+        return (mWines == null) ? 0 : mWines.size();
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -127,8 +113,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
 
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, ((Pair<Integer,Integer>)view.getTag()).first);
-                arguments.putInt(WineDetailFragment.ARG_WINE_ID, ((Pair<Integer,Integer>)view.getTag()).second);
+                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
                 WineDetailFragment fragment = new WineDetailFragment();
                 fragment.setArguments(arguments);
                 mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -137,12 +122,10 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, WineDetailActivity.class);
-                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, ((Pair<Integer,Integer>)view.getTag()).first);
-                intent.putExtra(WineDetailFragment.ARG_WINE_ID, ((Pair<Integer,Integer>)view.getTag()).second);
+                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
 
                 context.startActivity(intent);
             }
         }
     };
-
 }

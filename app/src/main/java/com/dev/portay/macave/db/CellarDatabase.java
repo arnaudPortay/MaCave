@@ -8,20 +8,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.dev.portay.macave.db.dao.CellarDao;
 import com.dev.portay.macave.db.dao.WineDao;
-import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
 
-import java.util.ArrayList;
 
-@Database(entities = {Wine.class, CellarItem.class}, version = 1)
+@Database(entities = {Wine.class}, version = 1)
 public abstract class CellarDatabase extends RoomDatabase
 {
 
     /************** MEMBERS **************/
     public abstract WineDao mWineDao();
-    public abstract CellarDao mCellarDao();
 
     private static CellarDatabase smInstance;
 
@@ -63,68 +59,32 @@ public abstract class CellarDatabase extends RoomDatabase
             };
 
     // TODO: Delete later
-    private static class PopulateDBAsync extends AsyncTask<Void, Void, ArrayList<Integer>>
+    private static class PopulateDBAsync extends AsyncTask<Void, Void, Void>
     {
         private final WineDao mWineDao;
-        private final CellarDao mCellarDao;
 
         PopulateDBAsync(CellarDatabase pDb)
         {
             mWineDao = pDb.mWineDao();
-            mCellarDao = pDb.mCellarDao();
         }
 
         @Override
-        protected ArrayList<Integer> doInBackground(final Void... pParams)
+        protected Void doInBackground(final Void... pParams)
         {
             mWineDao.deleteAll();
-            mCellarDao.deleteAll();
 
-            Wine lW1 = new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi");
+            Wine lW1 = new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi",1992,7);
             lW1.setId(0);
+
             mWineDao.insert(lW1);
-            Wine lW2 = new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère");
+            Wine lW2 = new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère", 1955,4);
             lW2.setId(1);
+
             mWineDao.insert(lW2);
-            Wine lW3 = new Wine("aae", "bordeaux", Wine.WineColor.eChampagne,"lalili");
+            Wine lW3 = new Wine("aae", "bordeaux", Wine.WineColor.eChampagne,"lalili", 1996,6);
             lW3.setId(2);
             mWineDao.insert(lW3);
 
-            ArrayList<Integer> lList = new ArrayList<>(3);
-            lList.add(0);
-            lList.add(1);
-            lList.add(2);
-
-            return lList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Integer> pResult)
-        {
-            new PopulateDBAsyncNext(mCellarDao).execute(pResult);
-        }
-    }
-
-    // TODO: Delete later
-    private static class PopulateDBAsyncNext extends AsyncTask<ArrayList<Integer>, Void, Void>
-    {
-        private CellarDao mCellarDao;
-
-        PopulateDBAsyncNext(CellarDao pCellarDao)
-        {
-            this.mCellarDao = pCellarDao;
-        }
-
-        @Override
-        protected Void doInBackground(ArrayList<Integer>... pParam)
-        {
-            CellarItem lC1 = new CellarItem(pParam[0].get(0), 1990, 3);
-            mCellarDao.insert(lC1);
-
-            CellarItem lC2 = new CellarItem(pParam[0].get(1), 888, 1);
-            mCellarDao.insert(lC2);
-            CellarItem lC3 = new CellarItem(pParam[0].get(2), 1992, 6);
-            mCellarDao.insert(lC3);
             return null;
         }
     }

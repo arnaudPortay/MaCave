@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -34,7 +33,6 @@ public class CellarListActivity extends AppCompatActivity {
 
     public static final int ADD_WINE_ACTIVITY_REQUEST_CODE = 1;
     private boolean mTwoPane;
-    private CellarViewModel mCellarViewModel;
     private WineViewModel mWineViewModel;
 
     @Override
@@ -47,11 +45,6 @@ public class CellarListActivity extends AppCompatActivity {
             Wine lWine = data.getParcelableExtra(AddWineActivity.WINE_REPLY);
             lWine.setId(mWineViewModel.getAllWines().getValue().size());
             mWineViewModel.insert(lWine);
-
-            CellarItem lCellarItem = data.getParcelableExtra(AddWineActivity.CELLAR_ITEM_REPLY);
-            lCellarItem.setWineId(lWine.getId());
-            mCellarViewModel.insert(lCellarItem);
-
 
             Snackbar.make(findViewById(R.id.fab), "done", Snackbar.LENGTH_LONG)
                   .setAction("Action", null).show();
@@ -90,20 +83,11 @@ public class CellarListActivity extends AppCompatActivity {
         recyclerView.setAdapter(lListAdapter);
 
         // Get a new or existing ViewModel from the ViewModelProvider.
-        mCellarViewModel = ViewModelProviders.of(this).get(CellarViewModel.class);
         mWineViewModel = ViewModelProviders.of(this).get(WineViewModel.class);
 
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        mCellarViewModel.getAllCellarItems().observe(this, new Observer<List<CellarItem>>()
-        {
-            @Override
-            public void onChanged(@Nullable final List<CellarItem> pWines)
-            {
-                lListAdapter.setCellarItems(pWines);
-            }
-        });
 
         mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
         {

@@ -31,6 +31,14 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     @ColumnInfo(name = "producer")
     private String mProducer;
 
+    @ColumnInfo(name = "year")
+    private int mYear;
+
+    @ColumnInfo(name = "bottle_number")
+    private int mBottleNumber;
+
+
+
     // TODO: Add the labelUri getters & setters and uncomment import statement
     //@ColumnInfo(name = "labelPath")
     //private URI mLabelPath;
@@ -71,6 +79,8 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         mName = pIn.readString();
         mColor = (WineColor)pIn.readSerializable();
         mProducer = pIn.readString();
+        mYear = pIn.readInt();
+        mBottleNumber = pIn.readInt();
     }
 
     @Override
@@ -80,6 +90,8 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         parcel.writeString(mName);
         parcel.writeSerializable(mColor);
         parcel.writeString(mProducer);
+        parcel.writeInt(mYear);
+        parcel.writeInt(mBottleNumber);
     }
 
     public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>()
@@ -102,12 +114,14 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     }
 
     /* * Constructor * */
-    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer)
+    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer, int mYear, int mBottleNumber)
     {
         this.mName = mName;
         this.mOrigin = mOrigin;
         this.mColor = mColor;
         this.mProducer = mProducer;
+        this.mYear = mYear;
+        this.mBottleNumber = mBottleNumber;
     }
 
     /* * Getters & Setters * */
@@ -159,5 +173,25 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     public void setProducer(String pProducer)
     {
         this.mProducer = pProducer;
+    }
+
+    public int getYear()
+    {
+        return mYear;
+    }
+
+    public void setYear(int pYear)
+    {
+        this.mYear = pYear;
+    }
+
+    public int getBottleNumber()
+    {
+        return mBottleNumber;
+    }
+
+    public void setBottleNumber(int pBottleNumber)
+    {
+        this.mBottleNumber = pBottleNumber;
     }
 }

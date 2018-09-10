@@ -6,9 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.dev.portay.macave.db.CellarDatabase;
-import com.dev.portay.macave.db.dao.CellarDao;
 import com.dev.portay.macave.db.dao.WineDao;
-import com.dev.portay.macave.db.entity.CellarItem;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -20,12 +18,9 @@ import java.util.List;
 public class DataRepository
 {
     /************** MEMBERS **************/
-    // TODO: Check if the wine related members are still usefull and delete them otherwise
     private static DataRepository msInstance;
     private WineDao mWineDao;
-    private CellarDao mCellarDao;
     private LiveData<List<Wine>> mWines;
-    private LiveData<List<CellarItem>> mCellarItems;
 
     /************** FUNCTIONS **************/
     public static DataRepository getDataRepository(Application pApplication)
@@ -53,9 +48,6 @@ public class DataRepository
         CellarDatabase lDatabase = CellarDatabase.getInstance(pApplication);
         mWineDao = lDatabase.mWineDao();
         mWines = mWineDao.getAllWines();
-
-        mCellarDao = lDatabase.mCellarDao();
-        mCellarItems = mCellarDao.getCellarBottles();
     }
 
     // Wrapper
@@ -93,50 +85,50 @@ public class DataRepository
     }
 
     //Wrapper
-    LiveData<List<CellarItem>> getCellarItemById(final int pId)
+    LiveData<List<Wine>> getCellarItemById(final int pId)
     {
-        return mCellarDao.getItemById(pId);
+        return mWineDao.getWineById(pId);
     }
 
     //Wrapper
-    LiveData<List<CellarItem>> getCellarBottles()
+    LiveData<List<Wine>> getCellarBottles()
     {
-        return mCellarItems;
+        return mWines;
     }
 
-    public void insertCellarItem(CellarItem pCellarItem)
+    public void insertCellarItem(Wine pWine)
     {
-        new insertCellarItemAsyncTask(mCellarDao).execute(pCellarItem);
+        new insertCellarItemAsyncTask(mWineDao).execute(pWine);
     }
 
-    private static class insertCellarItemAsyncTask extends AsyncTask<CellarItem,Void,Void>
+    private static class insertCellarItemAsyncTask extends AsyncTask<Wine,Void,Void>
     {
-        private CellarDao mAsyncTaskDao;
-        insertCellarItemAsyncTask(CellarDao pDao)
+        private WineDao mAsyncTaskDao;
+        insertCellarItemAsyncTask(WineDao pDao)
         {
             mAsyncTaskDao = pDao;
         }
 
         @Override
-        protected Void doInBackground(final CellarItem... cellarItems)
+        protected Void doInBackground(final Wine... wines)
         {
-            mAsyncTaskDao.insert(cellarItems[0]);
+            mAsyncTaskDao.insert(wines[0]);
             return null;
         }
     }
 
     public void updateBottleNumber(int pNumber, int pId)
     {
-        new updateBottleNumberAsyncTask(mCellarDao, pId, pNumber).execute();
+        new updateBottleNumberAsyncTask(mWineDao, pId, pNumber).execute();
     }
 
     private static class updateBottleNumberAsyncTask extends  AsyncTask<Void, Void, Void>
     {
-        private CellarDao mAsyncTaskDao;
+        private WineDao mAsyncTaskDao;
         private int mId;
         private int mNumber;
 
-        updateBottleNumberAsyncTask(CellarDao pDao, int pId, int pNumber)
+        updateBottleNumberAsyncTask(WineDao pDao, int pId, int pNumber)
         {
             mAsyncTaskDao = pDao;
             mId = pId;
