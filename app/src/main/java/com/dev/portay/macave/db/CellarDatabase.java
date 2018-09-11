@@ -81,7 +81,7 @@ public abstract class CellarDatabase extends RoomDatabase
             lW2.setId(1);
 
             mWineDao.insert(lW2);
-            Wine lW3 = new Wine("aae", "bordeaux", Wine.WineColor.eChampagne,"lalili", 1996,6);
+            Wine lW3 = new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6);
             lW3.setId(2);
             mWineDao.insert(lW3);
 
