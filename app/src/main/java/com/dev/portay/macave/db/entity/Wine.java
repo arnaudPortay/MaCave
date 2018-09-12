@@ -81,6 +81,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         mProducer = pIn.readString();
         mYear = pIn.readInt();
         mBottleNumber = pIn.readInt();
+        mOrigin = pIn.readString();
     }
 
     @Override
@@ -92,6 +93,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         parcel.writeString(mProducer);
         parcel.writeInt(mYear);
         parcel.writeInt(mBottleNumber);
+        parcel.writeString(mOrigin);
     }
 
     public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>()
