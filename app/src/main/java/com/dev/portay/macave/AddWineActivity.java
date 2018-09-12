@@ -12,12 +12,7 @@ import com.dev.portay.macave.db.entity.Wine;
 
 public class AddWineActivity extends AppCompatActivity
 {
-
-    public static final String NAME_REPLY = "com.dev.portay.macave.NAME_REPLY";
-    public static final String YEAR_REPLY = "com.dev.portay.macave.YEAR_REPLY";
-
     public static final String WINE_REPLY = "com.dev.portay.macave.WINE_REPLY";
-    public static final String CELLAR_ITEM_REPLY = "com.dev.portay.macave.CELLAR_ITEM_REPLY";
 
     private EditText mEditWineNameView;
     private EditText mEditWineYearView;
@@ -46,7 +41,7 @@ public class AddWineActivity extends AppCompatActivity
                     String lYear = mEditWineYearView.getText().toString();
 
                     lReplyIntent.putExtra(WINE_REPLY,
-                            new Wine(lName,"bordeaux", Wine.WineColor.ePaille,"test", Integer.parseInt(lYear), 12 ));
+                            new Wine(lName,"bourgogne", Wine.WineColor.ePaille,"test", Integer.parseInt(lYear), 12 ));
                     setResult(RESULT_OK, lReplyIntent);
                 }
                 finish();
