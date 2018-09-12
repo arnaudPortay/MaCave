@@ -42,9 +42,9 @@ public class CellarListActivity extends AppCompatActivity {
 
         if (requestCode == ADD_WINE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            Wine lWine = data.getParcelableExtra(AddWineActivity.WINE_REPLY);
-            lWine.setId(mWineViewModel.getAllWines().getValue().size());
-            mWineViewModel.insert(lWine);
+            mWineViewModel.insert(
+                    (Wine)data.getParcelableExtra(AddWineActivity.WINE_REPLY)
+            );
 
             Snackbar.make(findViewById(R.id.fab), "done", Snackbar.LENGTH_LONG)
                   .setAction("Action", null).show();

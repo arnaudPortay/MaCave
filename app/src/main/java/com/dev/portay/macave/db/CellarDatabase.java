@@ -73,17 +73,17 @@ public abstract class CellarDatabase extends RoomDatabase
         {
             mWineDao.deleteAll();
 
-            Wine lW1 = new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi",1992,7);
-            lW1.setId(0);
+            mWineDao.insert(
+                    new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi",1992,7)
+            );
 
-            mWineDao.insert(lW1);
-            Wine lW2 = new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère", 1955,4);
-            lW2.setId(1);
+            mWineDao.insert(
+                    new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère", 1955,4)
+            );
 
-            mWineDao.insert(lW2);
-            Wine lW3 = new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6);
-            lW3.setId(2);
-            mWineDao.insert(lW3);
+            mWineDao.insert(
+                    new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6)
+            );
 
             return null;
         }
