@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constrainLayoutDetail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,24 +21,25 @@
         android:textColor="@android:color/black"
         android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/year_detail"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/year_detail"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:text="Year"
         android:textColor="@android:color/black"
         android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/region_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/region_detail"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/region_detail" />
 
     <TextView
         android:id="@+id/producer_detail"
@@ -60,11 +61,11 @@
         android:id="@+id/increase_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/add_bottle_desc"
         android:src="@drawable/ic_add_black_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/space"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/number_detail"
         app:layout_constraintTop_toTopOf="@+id/number_detail" />
 
@@ -72,36 +73,46 @@
         android:id="@+id/decrease_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/remove_bottle_desc"
         android:src="@drawable/ic_remove_black_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/number_detail"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/nb_bottle_label"
         app:layout_constraintTop_toTopOf="@+id/number_detail" />
 
     <TextView
         android:id="@+id/number_detail"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="11"
         android:textColor="@android:color/black"
         android:textSize="22sp"
+        app:layout_constraintEnd_toStartOf="@+id/increase_button"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/decrease_button"
         app:layout_constraintTop_toTopOf="@+id/nb_bottle_label" />
 
     <TextView
         android:id="@+id/nb_bottle_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/number_bottle"
         android:textColor="@android:color/black"
         android:textSize="22sp"
+        app:layout_constraintEnd_toStartOf="@+id/decrease_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_weight="5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/color_detail" />
 
@@ -120,5 +131,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/producer_detail" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/increase_button"
+        app:layout_constraintTop_toTopOf="@+id/number_detail"
+        app:layout_constraintHorizontal_weight="2"/>
 
 </android.support.constraint.ConstraintLayout>
