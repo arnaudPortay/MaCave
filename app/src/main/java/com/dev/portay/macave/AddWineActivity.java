@@ -15,14 +15,14 @@ public class AddWineActivity extends AppCompatActivity
     public static final String WINE_REPLY = "com.dev.portay.macave.WINE_REPLY";
 
     private EditText mEditWineNameView;
-    private EditText mEditWineYearView;
+    //private EditText mEditWineYearView;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wine);
         mEditWineNameView = findViewById(R.id.editName);
-        mEditWineYearView = findViewById(R.id.editYear);
+       // mEditWineYearView = findViewById(R.id.yearSpinner).;
 
         final Button lButton = findViewById(R.id.buttonSave);
         lButton.setOnClickListener(new View.OnClickListener()
@@ -31,17 +31,17 @@ public class AddWineActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 Intent lReplyIntent = new Intent();
-                if (TextUtils.isEmpty(mEditWineNameView.getText()) || TextUtils.isEmpty(mEditWineYearView.getText()))
+                if (TextUtils.isEmpty(mEditWineNameView.getText()) /*|| TextUtils.isEmpty(mEditWineYearView.getText())*/)
                 {
                     setResult(RESULT_CANCELED, lReplyIntent);
                 }
                 else
                 {
                     String lName = mEditWineNameView.getText().toString();
-                    String lYear = mEditWineYearView.getText().toString();
+                    //String lYear = mEditWineYearView.getText().toString();
 
                     lReplyIntent.putExtra(WINE_REPLY,
-                            new Wine(lName,"bourgogne", Wine.WineColor.ePaille,"test", Integer.parseInt(lYear), 12 ));
+                            new Wine(lName,"bourgogne", Wine.WineColor.ePaille,"test", 1955, 12 ));
                     setResult(RESULT_OK, lReplyIntent);
                 }
                 finish();
