@@ -6,6 +6,9 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.dev.portay.macave.R;
 
 //import java.net.URI;
 
@@ -195,5 +198,31 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     public void setBottleNumber(int pBottleNumber)
     {
         this.mBottleNumber = pBottleNumber;
+    }
+
+    public static int getStringIdFromColor(WineColor pColor)
+    {
+        switch (pColor)
+        {
+            case eRed:
+                return R.string.wine_red;
+            case eWhite:
+                return R.string.wine_white;
+            case eRose:
+                return R.string.wine_rose;
+            case ePaille:
+                return R.string.wine_paille;
+            case eSparkling:
+                return R.string.wine_sparkling;
+            case eCremant:
+                return R.string.wine_cremant;
+            case eChampagne:
+                return R.string.wine_champagne;
+            case eChampagneRose:
+                return R.string.wine_champagne_rose;
+            default:
+                Log.e("MACAVE", "Wrong number for Wine Color enum");
+                return R.string.error;
+        }
     }
 }
