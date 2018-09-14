@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">MaCave</string>
     <string name="title_wine_detail">Détail du vin</string>
-    <string name="number_bottle">N° Bouteilles:</string>
+    <string name="number_bottle">N° Bouteilles :</string>
     <string name="add_bottle_desc">Ajouter une bouteille</string>
     <string name="remove_bottle_desc">Enlever une bouteille</string>
     <string name="wine_red">Rouge</string>
