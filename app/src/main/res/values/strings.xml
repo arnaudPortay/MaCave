@@ -19,5 +19,5 @@
     <string name="name">Nom</string>
     <string name="origin">Origine</string>
     <string name="producer">Producteur</string>
-
+    <string name="search_menu">Menu de recherche</string>
 </resources>
