@@ -31,4 +31,6 @@ public interface WineDao
     @Query("SELECT * FROM wine_table WHERE bottle_number != 0")
     LiveData<List<Wine>> getWinesWithBottles();
 
+    @Query("UPDATE wine_table SET rebuy = :pRebuy WHERE mId = :pId")
+    void updateRebuy(boolean pRebuy, int pId);
 }

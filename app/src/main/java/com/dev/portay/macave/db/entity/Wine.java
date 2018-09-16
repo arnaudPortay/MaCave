@@ -40,6 +40,9 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     @ColumnInfo(name = "bottle_number")
     private int mBottleNumber;
 
+    @ColumnInfo(name = "rebuy")
+    private boolean mRebuy;
+
 
 
     // TODO: Add the labelUri getters & setters and uncomment import statement
@@ -85,6 +88,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         mYear = pIn.readInt();
         mBottleNumber = pIn.readInt();
         mOrigin = pIn.readString();
+        mRebuy = pIn.readInt() != 0;
     }
 
     @Override
@@ -97,6 +101,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         parcel.writeInt(mYear);
         parcel.writeInt(mBottleNumber);
         parcel.writeString(mOrigin);
+        parcel.writeInt(mRebuy ? 1 : 0);
     }
 
     public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>()
@@ -127,6 +132,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         this.mProducer = mProducer;
         this.mYear = mYear;
         this.mBottleNumber = mBottleNumber;
+        this.mRebuy = false; // By default you're adding the wine so you have some and don't need to rebuy right away
     }
 
     /* * Getters & Setters * */
@@ -198,6 +204,16 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     public void setBottleNumber(int pBottleNumber)
     {
         this.mBottleNumber = pBottleNumber;
+    }
+
+    public boolean getRebuy()
+    {
+        return mRebuy;
+    }
+
+    public void setRebuy(boolean pRebuy)
+    {
+        this.mRebuy = pRebuy;
     }
 
     public static int getStringIdFromColor(WineColor pColor)

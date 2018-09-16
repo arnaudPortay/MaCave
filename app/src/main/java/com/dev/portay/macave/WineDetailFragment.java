@@ -101,10 +101,6 @@ public class WineDetailFragment extends Fragment {
                                 // Set Region
                                 ((TextView) getView().findViewById(R.id.region_detail)).
                                         setText(wines.get(0).getOrigin());
-                                /*if (wines.get(0).getOrigin() == null ||wines.get(0).getOrigin().isEmpty())
-                                {
-                                    getView().findViewById(R.id.region_detail).setVisibility(View.GONE);
-                                }*/
 
                                 //TODO: Handle cases where there is no region or name for good responsive behavior
                                 // Does not work....

@@ -114,4 +114,30 @@ public class DataRepository
             return null;
         }
     }
+
+    public void updateRebuy(boolean pRebuy, int pId)
+    {
+        new updateRebuyAsyncTask(mWineDao, pId, pRebuy).execute();
+    }
+
+    private static class updateRebuyAsyncTask extends AsyncTask<Void, Void, Void>
+    {
+        private WineDao mAsyncTaskDao;
+        private int mId;
+        private boolean mRebuy;
+
+        updateRebuyAsyncTask(WineDao pDao, int pId, boolean pRebuy)
+        {
+            mAsyncTaskDao = pDao;
+            mId = pId;
+            mRebuy = pRebuy;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            mAsyncTaskDao.updateRebuy(mRebuy, mId);
+            return null;
+        }
+    }
 }
