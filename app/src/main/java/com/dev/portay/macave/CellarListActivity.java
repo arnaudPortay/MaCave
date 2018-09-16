@@ -102,7 +102,8 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
 
-        mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
+        //mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
+        mWineViewModel.getWinesWithBottles().observe(this, new Observer<List<Wine>>()
         {
             @Override
             public void onChanged(@Nullable final List<Wine> pWines)

@@ -28,4 +28,7 @@ public interface WineDao
     @Query("UPDATE wine_table SET bottle_number = :pNumber WHERE mId = :pId")
     void updateBottleNumber(int pNumber, int pId);
 
+    @Query("SELECT * FROM wine_table WHERE bottle_number != 0")
+    LiveData<List<Wine>> getWinesWithBottles();
+
 }
