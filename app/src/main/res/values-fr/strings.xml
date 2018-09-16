@@ -21,4 +21,8 @@
     <string name="origin">Origine</string>
     <string name="producer">Producteur</string>
     <string name="search_menu">Menu de recherche</string>
+    <string name="nav_cellar">Ma Cave</string>
+    <string name="nav_buy_list">Liste d\'Achats</string>
+    <string name="nav_all_wines">Historique des Vins </string>
+    <string name="menu">Menu</string>
 </resources>
