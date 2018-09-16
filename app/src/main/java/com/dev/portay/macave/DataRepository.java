@@ -84,39 +84,6 @@ public class DataRepository
         }
     }
 
-    //Wrapper
-    LiveData<List<Wine>> getCellarItemById(final int pId)
-    {
-        return mWineDao.getWineById(pId);
-    }
-
-    //Wrapper
-    LiveData<List<Wine>> getCellarBottles()
-    {
-        return mWines;
-    }
-
-    public void insertCellarItem(Wine pWine)
-    {
-        new insertCellarItemAsyncTask(mWineDao).execute(pWine);
-    }
-
-    private static class insertCellarItemAsyncTask extends AsyncTask<Wine,Void,Void>
-    {
-        private WineDao mAsyncTaskDao;
-        insertCellarItemAsyncTask(WineDao pDao)
-        {
-            mAsyncTaskDao = pDao;
-        }
-
-        @Override
-        protected Void doInBackground(final Wine... wines)
-        {
-            mAsyncTaskDao.insert(wines[0]);
-            return null;
-        }
-    }
-
     public void updateBottleNumber(int pNumber, int pId)
     {
         new updateBottleNumberAsyncTask(mWineDao, pId, pNumber).execute();
