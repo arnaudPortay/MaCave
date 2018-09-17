@@ -24,4 +24,8 @@
     <string name="nav_buy_list">Liste d\'Achats</string>
     <string name="nav_all_wines">Historique des Vins </string>
     <string name="menu">Menu</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="add_buy_list_title">Plus de bouteilles</string>
+    <string name="add_buy_list_mess">Ajoutez le vin à la liste des vins à racheter ?</string>
 </resources>

@@ -102,22 +102,6 @@ public class WineDetailActivity extends AppCompatActivity {
 
         // update bottle number
         DataRepository.getDataRepository().updateBottleNumber(lNumber, lId);
-        /*if (lNumber == 0)
-        {
-            AlertDialog.Builder lBuilder = new AlertDialog.Builder(findViewById(R.id.wine_detail_container).getContext()).setCancelable(false);
-            lBuilder.setTitle(R.string.add_wine_error_title);
-            lBuilder.setMessage(R.string.add_wine_error_message);
-            lBuilder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    // Nothing to do
-                }
-            });
-            AlertDialog lDialog = lBuilder.create();
-            lDialog.show();
-        }*/
     }
 }
 
