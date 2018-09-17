@@ -67,6 +67,11 @@ public class DataRepository
         return mWineDao.getWinesWithBottles();
     }
 
+    LiveData<List<Wine>> getWinesToBuy()
+    {
+        return mWineDao.getWinesToBuy();
+    }
+
     public void insertWine(Wine pWine)
     {
         new insertWineAsyncTask(mWineDao).execute(pWine);

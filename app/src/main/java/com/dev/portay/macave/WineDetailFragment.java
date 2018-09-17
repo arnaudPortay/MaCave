@@ -81,6 +81,8 @@ public class WineDetailFragment extends Fragment {
                                         if (lVal.compareTo("0") == 0)
                                         {
                                             DataRepository.getDataRepository().
+                                                    updateBottleNumber(1, wines.get(0).getId());
+                                            DataRepository.getDataRepository().
                                                     updateRebuy(false, wines.get(0).getId());
                                         }
                                     }

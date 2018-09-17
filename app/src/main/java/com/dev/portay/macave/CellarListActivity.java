@@ -44,6 +44,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
     private WineViewModel mWineViewModel;
     private List<Wine> mWines; // Cached Data for searchview. Kinda ugly, find another way to do this ?
     private DrawerLayout mDrawerLayout;
+    private Observer<List<Wine>> mObserver;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -103,15 +104,17 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         // in the foreground.
 
         //mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
-        mWineViewModel.getWinesWithBottles().observe(this, new Observer<List<Wine>>()
+        mObserver = new Observer<List<Wine>>()
         {
             @Override
-            public void onChanged(@Nullable final List<Wine> pWines)
+            public void onChanged(@Nullable List<Wine> pWines)
             {
                 mWines = pWines;
                 lListAdapter.setWines(pWines);
             }
-        });
+        };
+        mWineViewModel.getWinesWithBottles().observe(this, mObserver);
+
 
 
         // Drawer
@@ -129,7 +132,25 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
 
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
+                        if (mWineViewModel.getWinesWithBottles().hasObservers())
+                        {
+                            mWineViewModel.getWinesWithBottles().removeObserver(mObserver);
+                        }
 
+                        if (mWineViewModel.getWinesToBuy().hasObservers())
+                        {
+                            mWineViewModel.getWinesToBuy().removeObserver(mObserver);
+                        }
+
+                        if (menuItem.getItemId() == R.id.nav_buy_list)
+                        {
+                            mWineViewModel.getWinesToBuy().observe(CellarListActivity.this, mObserver);
+                        }
+
+                        if (menuItem.getItemId() == R.id.nav_cellar)
+                        {
+                            mWineViewModel.getWinesWithBottles().observe(CellarListActivity.this, mObserver);
+                        }
                         return true;
                     }
                 });
