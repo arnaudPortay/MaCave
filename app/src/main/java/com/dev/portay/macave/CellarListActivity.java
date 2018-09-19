@@ -69,10 +69,11 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle(getTitle());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -142,15 +143,29 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                             mWineViewModel.getWinesToBuy().removeObserver(mObserver);
                         }
 
-                        if (menuItem.getItemId() == R.id.nav_buy_list)
+                        if (mWineViewModel.getAllWines().hasObservers())
                         {
-                            mWineViewModel.getWinesToBuy().observe(CellarListActivity.this, mObserver);
+                            mWineViewModel.getAllWines().removeObserver(mObserver);
                         }
 
                         if (menuItem.getItemId() == R.id.nav_cellar)
                         {
                             mWineViewModel.getWinesWithBottles().observe(CellarListActivity.this, mObserver);
+                            getSupportActionBar().setTitle(R.string.app_name);
                         }
+
+                        if (menuItem.getItemId() == R.id.nav_buy_list)
+                        {
+                            mWineViewModel.getWinesToBuy().observe(CellarListActivity.this, mObserver);
+                            getSupportActionBar().setTitle(R.string.nav_buy_list);
+                        }
+
+                        if (menuItem.getItemId() == R.id.nav_all_wines)
+                        {
+                            mWineViewModel.getAllWines().observe(CellarListActivity.this, mObserver);
+                            getSupportActionBar().setTitle(R.string.nav_all_wines);
+                        }
+
                         return true;
                     }
                 });
