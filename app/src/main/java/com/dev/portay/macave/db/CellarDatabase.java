@@ -85,6 +85,13 @@ public abstract class CellarDatabase extends RoomDatabase
                     new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6)
             );
 
+            /*for (int i = 0; i < 300; i++)
+            {
+                mWineDao.insert(
+                        new Wine("a", "b", Wine.WineColor.eChampagne,"c", i,1)
+                );
+            }*/
+
             return null;
         }
     }
