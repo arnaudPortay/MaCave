@@ -266,6 +266,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                     || lOrigin.contains(lLowerCaseQuery) && !lWine.getOrigin().isEmpty()
                     || lProducer.contains(lLowerCaseQuery) && !lWine.getProducer().isEmpty()
                     || String.format("%d",lWine.getYear()).contains(lLowerCaseQuery)
+                    || String.format("%d", lWine.getBottleNumber()).contains(lLowerCaseQuery)
                     || lColor.contains(lLowerCaseQuery))
             {
                 lFilteredList.add(lWine);
