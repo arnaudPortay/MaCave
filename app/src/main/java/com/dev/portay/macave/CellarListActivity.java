@@ -3,6 +3,7 @@ package com.dev.portay.macave;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -196,11 +197,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
     @Override
     public boolean onQueryTextChange(String s)
     {
-        final List<Wine> lFilteredWineList = filter(mWines,s);
-        RecyclerView lView = findViewById(R.id.wine_list);
-        ((CellarAdapter)lView.getAdapter()).setWines(lFilteredWineList);
-        lView.scrollToPosition(0);
-
+        new FilterAsync(mWines,s).execute();
         return true;
     }
 
@@ -210,6 +207,8 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         // Nothing to do
         return false;
     }
+
+
 
     private List<Wine> filter(List<Wine> pWines, String pQuery)
     {
@@ -273,5 +272,31 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             }
         }
         return lFilteredList;
+    }
+
+    private class FilterAsync extends AsyncTask<Void, Void, List<Wine>>
+    {
+        private List<Wine> mWines;
+        private String mQuery;
+
+        FilterAsync(List<Wine> pWines, String pQuery)
+        {
+            mWines = pWines;
+            mQuery = pQuery;
+        }
+
+        @Override
+        protected List<Wine> doInBackground(Void... voids)
+        {
+            return filter(mWines, mQuery);
+        }
+
+        @Override
+        protected void onPostExecute(List<Wine> wines)
+        {
+            RecyclerView lView = findViewById(R.id.wine_list);
+            ((CellarAdapter)lView.getAdapter()).setWines(wines);
+            lView.scrollToPosition(0);
+        }
     }
 }
