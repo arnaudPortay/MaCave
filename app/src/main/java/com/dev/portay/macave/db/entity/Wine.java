@@ -18,7 +18,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
 
     /* *************  MEMBERS  ************* */
 
-    @PrimaryKey(autoGenerate = true) // Warning : Primary key is NOT auto generated, this makes it easier for db insertion
+    @PrimaryKey(autoGenerate = true)
     private int mId;
 
     @ColumnInfo(name = "name")
