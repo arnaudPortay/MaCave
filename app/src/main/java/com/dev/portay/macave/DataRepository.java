@@ -6,7 +6,9 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.dev.portay.macave.db.CellarDatabase;
+import com.dev.portay.macave.db.dao.DishDao;
 import com.dev.portay.macave.db.dao.WineDao;
+import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class DataRepository
     private static DataRepository msInstance;
     private WineDao mWineDao;
     private LiveData<List<Wine>> mWines;
+    private DishDao mDishDao;
 
     /************** FUNCTIONS **************/
     public static DataRepository getDataRepository(Application pApplication)
@@ -48,6 +51,7 @@ public class DataRepository
         CellarDatabase lDatabase = CellarDatabase.getInstance(pApplication);
         mWineDao = lDatabase.mWineDao();
         mWines = mWineDao.getAllWines();
+        mDishDao = lDatabase.mDishDao();
     }
 
     // Wrapper
@@ -70,6 +74,55 @@ public class DataRepository
     LiveData<List<Wine>> getWinesToBuy()
     {
         return mWineDao.getWinesToBuy();
+    }
+
+    LiveData<List<Dish>> getDishesByWineId(final int pWineId)
+    {
+        return mDishDao.getDishesByWineId(pWineId);
+    }
+
+    public void insertDish(Dish pDish)
+    {
+        new insertDishAsyncTask(mDishDao).execute(pDish);
+    }
+
+    private static class insertDishAsyncTask extends AsyncTask<Dish, Void, Void>
+    {
+        private DishDao mDishDao;
+
+        insertDishAsyncTask(DishDao pDishDao)
+        {
+            mDishDao = pDishDao;
+        }
+
+        @Override
+        protected Void doInBackground(Dish... dishes)
+        {
+            mDishDao.insert(dishes[0]);
+            return null;
+        }
+    }
+
+    public void deleteDish(Dish pDish)
+    {
+        new deleteDishAsyncTask(mDishDao).execute(pDish);
+    }
+
+    private static class deleteDishAsyncTask extends AsyncTask<Dish, Void, Void>
+    {
+        private DishDao mDishDao;
+
+        deleteDishAsyncTask(DishDao pDishDao)
+        {
+            mDishDao = pDishDao;
+        }
+
+        @Override
+        protected Void doInBackground(Dish... dishes)
+        {
+            mDishDao.deleteDish(dishes[0]);
+            return null;
+        }
     }
 
     public void insertWine(Wine pWine)

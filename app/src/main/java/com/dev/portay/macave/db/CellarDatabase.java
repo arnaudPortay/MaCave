@@ -8,16 +8,19 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.dev.portay.macave.db.dao.DishDao;
 import com.dev.portay.macave.db.dao.WineDao;
+import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 
-@Database(entities = {Wine.class}, version = 1)
+@Database(entities = {Wine.class, Dish.class}, version = 1)
 public abstract class CellarDatabase extends RoomDatabase
 {
 
     /************** MEMBERS **************/
     public abstract WineDao mWineDao();
+    public abstract DishDao mDishDao();
 
     private static CellarDatabase smInstance;
 
