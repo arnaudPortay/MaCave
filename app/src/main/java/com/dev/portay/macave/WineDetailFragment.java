@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -152,9 +153,19 @@ public class WineDetailFragment extends Fragment {
                                 // Set Color
                                 ((TextView) getView().findViewById(R.id.color_detail))
                                         .setText(Wine.getStringIdFromColor(wines.get(0).getColor()));
+
+                                Chip lChip = new Chip(getContext());
+                                lChip.setChipIconResource(R.drawable.ic_add_black_24dp);
+                                lChip.setCheckedIconEnabled(true);
+
+                                lChip.setChipIconTintResource(android.R.color.background_dark);
+
+                                //((ChipGroup) getView().findViewById(R.id.dishes_chipgroup)).addView(lChip,3);
                             }
                         }
                     });
+
+
         }
     }
 
