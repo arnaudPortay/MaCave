@@ -29,4 +29,6 @@
     <string name="no">Non</string>
     <string name="add_buy_list_title">Plus de bouteilles</string>
     <string name="add_buy_list_mess">Ajoutez le vin à la liste des vins à racheter ?</string>
+    <string name="cancel">Annuler</string>
+    <string name="add_suggested_dish_title">Nouvelle suggestion de plat</string>
 </resources>

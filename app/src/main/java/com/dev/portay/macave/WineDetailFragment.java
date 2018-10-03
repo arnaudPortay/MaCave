@@ -7,14 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -47,11 +50,6 @@ public class WineDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            //TODO: Try and follow the above piece of advice
-
             ViewModelProviders.of(this).get(WineViewModel.class)
                     .getWineById(getArguments().getInt(ARG_ITEM_ID))
                     .observe(this, new Observer<List<Wine>>()
@@ -154,13 +152,80 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.color_detail))
                                         .setText(Wine.getStringIdFromColor(wines.get(0).getColor()));
 
-                                Chip lChip = new Chip(getContext());
-                                lChip.setChipIconResource(R.drawable.ic_add_black_24dp);
-                                lChip.setCheckedIconEnabled(true);
+                                // Set suggested dished
+                                DataRepository.getDataRepository().getDishesByWineId(wines.get(0).getId()).observe(WineDetailFragment.this, new Observer<List<Dish>>()
+                                {
+                                    @Override
+                                    public void onChanged(@Nullable List<Dish> dishes)
+                                    {
+                                        for (final Dish lDish: dishes) // iterate through dishes
+                                        {
+                                            // do nothing if the chip already exists
+                                            if (!chipGrouHasDish((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lDish))
+                                            {
+                                                // Create chip
+                                                Chip lChip = new Chip(getContext());
+                                                lChip.setText(lDish.mDishName);
+                                                lChip.setCloseIconEnabled(true);
+                                                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View view)
+                                                    {
+                                                        // delete chip
+                                                        ((ChipGroup) getView().findViewById(R.id.dishes_chipgroup)).removeView(view);
+                                                        // delete dish from db
+                                                        DataRepository.getDataRepository().deleteDish(lDish);
+                                                    }
+                                                });
 
-                                lChip.setChipIconTintResource(android.R.color.background_dark);
+                                                // Add chip to chipgroup
+                                                ((ChipGroup) getView().findViewById(R.id.dishes_chipgroup)).addView(lChip, ((ChipGroup) getView().findViewById(R.id.dishes_chipgroup)).getChildCount() - 1);
+                                            }
+                                        }
+                                    }
+                                });
 
-                                //((ChipGroup) getView().findViewById(R.id.dishes_chipgroup)).addView(lChip,3);
+                                // Add dish chip behaviour
+                                getView().findViewById(R.id.chip_addDish).setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(final View view)
+                                    {
+                                        AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
+                                        lBuilder.setTitle(R.string.add_suggested_dish_title);
+
+                                        final EditText lEdit = new EditText(view.getContext());
+                                        lBuilder.setView(lEdit);
+
+                                        lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i)
+                                            {
+                                                if (lEdit.getText().toString().compareTo("") != 0) // Do nothing if empty
+                                                {
+                                                    Dish lDish = new Dish(wines.get(0).getId(), lEdit.getText().toString());
+                                                    if (!chipGrouHasDish((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lDish))// do nothing if dish already exists
+                                                    {
+                                                        DataRepository.getDataRepository().insertDish(lDish);
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                        lBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i)
+                                            {
+                                                // Nothing to do
+                                            }
+                                        });
+                                        AlertDialog lDialog = lBuilder.create();
+                                        lDialog.show();
+                                    }
+                                });
                             }
                         }
                     });
@@ -173,6 +238,19 @@ public class WineDetailFragment extends Fragment {
     public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.cellar_item_detail, container, false);
+    }
+
+    private boolean chipGrouHasDish(ChipGroup pGroup, Dish pDish)
+    {
+        for (int i = 0; i < pGroup.getChildCount(); i++)
+        {
+            if (pDish.mDishName.compareTo(((Chip)pGroup.getChildAt(i)).getText().toString()) == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

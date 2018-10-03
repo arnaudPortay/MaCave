@@ -158,7 +158,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nb_bottle_label">
 
         <!-- Chips can be declared here, or added dynamically. -->
-        <android.support.design.chip.Chip
+        <!--<android.support.design.chip.Chip
             android:id="@+id/chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
@@ -176,10 +176,10 @@
             android:checkable="false"
             android:clickable="false"
             android:text="tit totote"
-            app:checkedIconEnabled="false" />
+            app:checkedIconEnabled="false" /> -->
 
         <android.support.design.chip.Chip
-            android:id="@+id/chip3"
+            android:id="@+id/chip_addDish"
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
