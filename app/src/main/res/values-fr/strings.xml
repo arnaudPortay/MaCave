@@ -31,4 +31,5 @@
     <string name="add_buy_list_mess">Ajoutez le vin à la liste des vins à racheter ?</string>
     <string name="cancel">Annuler</string>
     <string name="add_suggested_dish_title">Nouvelle suggestion de plat</string>
+    <string name="dish_suggestion">Suggestions de plats :</string>
 </resources>

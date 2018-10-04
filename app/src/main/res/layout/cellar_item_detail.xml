@@ -150,12 +150,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nb_bottle_label">
+        app:layout_constraintTop_toBottomOf="@+id/dishes_label">
 
         <!-- Chips can be declared here, or added dynamically. -->
         <!--<android.support.design.chip.Chip
@@ -183,13 +184,15 @@
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="false"
             android:drawablePadding="0dp"
             android:text=""
-            android:checkable="false"
+            android:textColor="@android:color/background_light"
             app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@color/colorPrimary"
             app:chipEndPadding="0dp"
             app:chipIcon="@drawable/black_add"
-            app:chipIconTint="@android:color/background_dark"
+            app:chipIconTint="@android:color/background_light"
             app:chipStartPadding="0dp"
             app:closeIconEnabled="false"
             app:closeIconEndPadding="0dp"
@@ -201,5 +204,35 @@
 
 
     </android.support.design.chip.ChipGroup>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nb_bottle_label" />
+
+    <TextView
+        android:id="@+id/dishes_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/dish_suggestion"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
 </android.support.constraint.ConstraintLayout>

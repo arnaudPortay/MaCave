@@ -167,6 +167,10 @@ public class WineDetailFragment extends Fragment {
                                                 Chip lChip = new Chip(getContext());
                                                 lChip.setText(lDish.mDishName);
                                                 lChip.setCloseIconEnabled(true);
+                                                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                                                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                                                lChip.setCloseIconTintResource(android.R.color.background_light);
+                                                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
                                                 lChip.setOnCloseIconClickListener(new View.OnClickListener()
                                                 {
                                                     @Override
