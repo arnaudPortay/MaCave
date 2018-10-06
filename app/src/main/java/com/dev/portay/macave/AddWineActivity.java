@@ -145,6 +145,12 @@ public class AddWineActivity extends AppCompatActivity
             @Override
             public void onClick(final View view)
             {
+                mEditBottleNumberView.clearFocus();
+                mEditProducerView.clearFocus();
+                mEditRegionView.clearFocus();
+                mEditWineNameView.clearFocus();
+                view.requestFocusFromTouch();
+
                 AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                 lBuilder.setTitle(R.string.add_cepage);
 
@@ -234,6 +240,12 @@ public class AddWineActivity extends AppCompatActivity
             @Override
             public void onClick(final View view)
             {
+                mEditBottleNumberView.clearFocus();
+                mEditProducerView.clearFocus();
+                mEditRegionView.clearFocus();
+                mEditWineNameView.clearFocus();
+                view.requestFocusFromTouch();
+
                 AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                 lBuilder.setTitle(R.string.add_suggested_dish_title);
 
