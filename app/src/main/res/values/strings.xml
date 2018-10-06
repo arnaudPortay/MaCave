@@ -31,4 +31,6 @@
     <string name="cancel">Annuler</string>
     <string name="add_suggested_dish_title">Nouvelle suggestion de plat</string>
     <string name="dish_suggestion">Suggestions de plats :</string>
+    <string name="add_cepage">Ajouter un cépage</string>
+    <string name="cepage">Cépages :</string>
 </resources>

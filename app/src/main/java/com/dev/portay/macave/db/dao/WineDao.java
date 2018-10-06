@@ -14,7 +14,7 @@ public interface WineDao
 {
 
     @Insert
-    void insert(Wine pWine);
+    long insert(Wine pWine);
 
     @Query("DELETE FROM wine_table")
     void deleteAll();

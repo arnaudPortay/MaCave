@@ -3,6 +3,8 @@ package com.dev.portay.macave;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -16,11 +18,13 @@ import com.dev.portay.macave.db.entity.Wine;
 import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddWineActivity extends AppCompatActivity
 {
     public static final String WINE_REPLY = "com.dev.portay.macave.WINE_REPLY";
+    public static final String CEPAGE_REPLY = "com.dev.portay.macave.CEPAGE_REPLY";
 
     private EditText mEditWineNameView;
     private EditText mEditRegionView;
@@ -30,6 +34,7 @@ public class AddWineActivity extends AppCompatActivity
     private EditText mEditBottleNumberView;
     private int mYear;
     private Wine.WineColor mColor;
+    private ArrayList<String> mCepageNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +49,7 @@ public class AddWineActivity extends AppCompatActivity
         mYearSpinner = findViewById(R.id.yearSpinner);
         mColorSpinner = findViewById(R.id.colorSpinner);
         mEditBottleNumberView = findViewById(R.id.editBottleNumber);
+        mCepageNameList = new ArrayList<>();
 
         // Populate year spinner
         int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -92,8 +98,71 @@ public class AddWineActivity extends AppCompatActivity
             }
         });
 
+        // Cepage chips
+        findViewById(R.id.aw_chip_addCepage).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View view)
+            {
+                AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
+                lBuilder.setTitle(R.string.add_cepage);
+
+                final EditText lEdit = new EditText(view.getContext());
+                lBuilder.setView(lEdit);
+
+                lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        if (lEdit.getText().toString().compareTo("") != 0) // Do nothing if empty
+                        {
+                            if (!chipGroupHasChip((ChipGroup)findViewById(R.id.aw_cepage_chipgroup), lEdit.getText().toString()))// do nothing if dish already exists
+                            {
+                                // Create chip
+                                Chip lChip = new Chip(view.getContext());
+                                lChip.setText(lEdit.getText().toString());
+                                lChip.setCloseIconEnabled(true);
+                                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                                lChip.setCloseIconTintResource(android.R.color.background_light);
+                                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        // delete chip
+                                        mCepageNameList.remove(((Chip)view).getText().toString());
+                                        ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).removeView(view);
+                                    }
+                                });
+
+                                // Add chip to chipgroup and to list
+                                mCepageNameList.add(lEdit.getText().toString());
+                                ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).addView(lChip, ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).getChildCount() - 1);
+                            }
+                        }
+                    }
+                });
+
+                lBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        // Nothing to do
+                    }
+                });
+                AlertDialog lDialog = lBuilder.create();
+                lDialog.show();
+            }
+        });
 
 
+
+
+        // Validation Button
         final Button lButton = findViewById(R.id.buttonSave);
         lButton.setOnClickListener(new View.OnClickListener()
         {
@@ -126,10 +195,24 @@ public class AddWineActivity extends AppCompatActivity
 
                     lReplyIntent.putExtra(WINE_REPLY,
                             new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber));
+                    lReplyIntent.putStringArrayListExtra(CEPAGE_REPLY, mCepageNameList);
                     setResult(RESULT_OK, lReplyIntent);
                     finish();
                 }
             }
         });
+    }
+
+    private boolean chipGroupHasChip(ChipGroup pGroup, String pText)
+    {
+        for (int i = 0; i < pGroup.getChildCount(); i++)
+        {
+            if (pText.compareTo(((Chip)pGroup.getChildAt(i)).getText().toString()) == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

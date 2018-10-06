@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
@@ -161,7 +162,7 @@ public class WineDetailFragment extends Fragment {
                                         for (final Dish lDish: dishes) // iterate through dishes
                                         {
                                             // do nothing if the chip already exists
-                                            if (!chipGrouHasDish((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lDish))
+                                            if (!chipGroupHasChip((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lDish.mDishName))
                                             {
                                                 // Create chip
                                                 Chip lChip = new Chip(getContext());
@@ -209,10 +210,9 @@ public class WineDetailFragment extends Fragment {
                                             {
                                                 if (lEdit.getText().toString().compareTo("") != 0) // Do nothing if empty
                                                 {
-                                                    Dish lDish = new Dish(wines.get(0).getId(), lEdit.getText().toString());
-                                                    if (!chipGrouHasDish((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lDish))// do nothing if dish already exists
+                                                    if (!chipGroupHasChip((ChipGroup) getView().findViewById(R.id.dishes_chipgroup), lEdit.getText().toString()))// do nothing if dish already exists
                                                     {
-                                                        DataRepository.getDataRepository().insertDish(lDish);
+                                                        DataRepository.getDataRepository().insertDish(new Dish(wines.get(0).getId(), lEdit.getText().toString()));
                                                     }
                                                 }
                                             }
@@ -230,6 +230,30 @@ public class WineDetailFragment extends Fragment {
                                         lDialog.show();
                                     }
                                 });
+
+                                // Set suggested dished
+                                DataRepository.getDataRepository().getCepageByWineId(wines.get(0).getId()).observe(WineDetailFragment.this, new Observer<List<Cepage>>()
+                                {
+                                    @Override
+                                    public void onChanged(@Nullable List<Cepage> cepages)
+                                    {
+                                        for (final Cepage lCepage: cepages) // iterate through cepages
+                                        {
+                                            // do nothing if the chip already exists
+                                            if (!chipGroupHasChip((ChipGroup) getView().findViewById(R.id.cepage_chipgroup), lCepage.mCepageName))
+                                            {
+                                                // Create chip
+                                                Chip lChip = new Chip(getContext());
+                                                lChip.setText(lCepage.mCepageName);
+                                                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                                                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+
+                                                // Add chip to chipgroup
+                                                ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).addView(lChip, ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).getChildCount());
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
@@ -244,11 +268,11 @@ public class WineDetailFragment extends Fragment {
         return inflater.inflate(R.layout.cellar_item_detail, container, false);
     }
 
-    private boolean chipGrouHasDish(ChipGroup pGroup, Dish pDish)
+    private boolean chipGroupHasChip(ChipGroup pGroup, String pText)
     {
         for (int i = 0; i < pGroup.getChildCount(); i++)
         {
-            if (pDish.mDishName.compareTo(((Chip)pGroup.getChildAt(i)).getText().toString()) == 0)
+            if (pText.compareTo(((Chip)pGroup.getChildAt(i)).getText().toString()) == 0)
             {
                 return true;
             }

@@ -27,15 +27,16 @@
         android:id="@+id/buttonSave"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottle_number" />
+        app:layout_constraintTop_toBottomOf="@+id/aw_cepage_chipgroup" />
 
     <Spinner
         android:id="@+id/yearSpinner"
@@ -139,5 +140,77 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/editBottleNumber"
         app:layout_constraintTop_toTopOf="@+id/bottle_number" />
+
+    <android.support.design.chip.ChipGroup
+        android:id="@+id/aw_cepage_chipgroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aw_cepage_label">
+
+        <!-- Chips can be declared here, or added dynamically. -->
+        <android.support.design.chip.Chip
+            android:id="@+id/aw_chip_addCepage"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="false"
+            android:drawablePadding="0dp"
+            android:text=""
+            android:textColor="@android:color/background_light"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@color/colorPrimary"
+            app:chipEndPadding="0dp"
+            app:chipIcon="@drawable/black_add"
+            app:chipIconTint="@android:color/background_light"
+            app:chipStartPadding="0dp"
+            app:closeIconEnabled="false"
+            app:closeIconEndPadding="0dp"
+            app:closeIconStartPadding="0dp"
+            app:iconEndPadding="4dp"
+            app:iconStartPadding="4dp"
+            app:textEndPadding="0dp"
+            app:textStartPadding="0dp" />
+
+
+    </android.support.design.chip.ChipGroup>
+
+    <View
+        android:id="@+id/aw_cepage_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottle_number" />
+
+    <TextView
+        android:id="@+id/aw_cepage_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/cepage"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aw_cepage_divider" />
 
 </android.support.constraint.ConstraintLayout>

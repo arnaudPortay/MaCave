@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.ArrayList;
@@ -54,8 +55,16 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
 
         if (requestCode == ADD_WINE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
         {
+            List<String> lCepageNames = data.getStringArrayListExtra(AddWineActivity.CEPAGE_REPLY);
+            List<Cepage> lCepageList = new ArrayList<>();
+            for (String lCepageName: lCepageNames)
+            {
+                lCepageList.add(new Cepage(-1, lCepageName)); //wine id is set later
+            }
+
             mWineViewModel.insert(
-                    (Wine)data.getParcelableExtra(AddWineActivity.WINE_REPLY)
+                    (Wine)data.getParcelableExtra(AddWineActivity.WINE_REPLY),
+                    lCepageList
             );
 
             Snackbar.make(findViewById(R.id.fab), "done", Snackbar.LENGTH_LONG)

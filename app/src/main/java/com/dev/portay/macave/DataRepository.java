@@ -13,6 +13,7 @@ import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -180,23 +181,43 @@ public class DataRepository
 
     public void insertWine(Wine pWine)
     {
-        new insertWineAsyncTask(mWineDao).execute(pWine);
+        new insertWineAsyncTask(mWineDao,mCepageDao, new ArrayList<Cepage>()).execute(pWine);
     }
 
-    private static class insertWineAsyncTask extends AsyncTask<Wine, Void, Void>
+    public void insertWine(Wine pWine, List<Cepage> pCepageList)
+    {
+        new insertWineAsyncTask(mWineDao, mCepageDao, pCepageList).execute(pWine);
+    }
+
+    private static class insertWineAsyncTask extends AsyncTask<Wine, Void, Long>
     {
         private WineDao mAsyncTaskDao;
+        private List<Cepage> mCepageList;
+        private CepageDao mCepageDao;
 
-        insertWineAsyncTask(WineDao pDao)
+        insertWineAsyncTask(WineDao pDao, CepageDao pCDao ,List<Cepage> pCepageList)
         {
             mAsyncTaskDao = pDao;
+            mCepageList = pCepageList;
+            mCepageDao = pCDao;
         }
 
         @Override
-        protected Void doInBackground(final Wine... params)
+        protected Long doInBackground(final Wine... params)
         {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
+            return mAsyncTaskDao.insert(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Long aLong)
+        {
+            super.onPostExecute(aLong);
+
+            for (Cepage lCepage: mCepageList)
+            {
+                lCepage.mWineId = aLong.intValue();
+                DataRepository.getDataRepository().insertCepage(lCepage);
+            }
         }
     }
 
