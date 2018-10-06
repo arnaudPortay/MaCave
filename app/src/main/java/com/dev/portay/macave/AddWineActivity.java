@@ -35,6 +35,8 @@ public class AddWineActivity extends AppCompatActivity
     private EditText mEditBottleNumberView;
     private int mYear;
     private Wine.WineColor mColor;
+
+    // Statics to keep data when rebuilding due to orientation change
     private static ArrayList<String> mCepageNameList;
     private static ArrayList<String> mDishNameList;
 
@@ -327,6 +329,8 @@ public class AddWineActivity extends AppCompatActivity
                     lReplyIntent.putStringArrayListExtra(DISHES_REPLY, mDishNameList);
                     setResult(RESULT_OK, lReplyIntent);
                     finish();
+
+                    // Clear Lists for next wine
                     mDishNameList.clear();
                     mCepageNameList.clear();
                 }
@@ -345,5 +349,15 @@ public class AddWineActivity extends AppCompatActivity
         }
 
         return false;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // Clear Lists for next wine
+        mDishNameList.clear();
+        mCepageNameList.clear();
+
+        super.onBackPressed();
     }
 }
