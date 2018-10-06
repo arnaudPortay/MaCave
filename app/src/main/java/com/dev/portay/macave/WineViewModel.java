@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
 import com.dev.portay.macave.db.entity.Cepage;
+import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public class WineViewModel extends AndroidViewModel
     }
 
 
-    public void insert(Wine pWine, List<Cepage> pCepageList)
+    public void insert(Wine pWine, List<Cepage> pCepageList, List<Dish> pDishList)
     {
-        mRepository.insertWine(pWine, pCepageList);
+        mRepository.insertWine(pWine, pCepageList, pDishList);
     }
 }

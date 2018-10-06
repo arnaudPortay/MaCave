@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.dev.portay.macave.db.entity.Cepage;
+import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.ArrayList;
@@ -62,9 +63,16 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                 lCepageList.add(new Cepage(-1, lCepageName)); //wine id is set later
             }
 
+            List<String> lDishNameList = data.getStringArrayListExtra(AddWineActivity.DISHES_REPLY);
+            List<Dish> lDishList = new ArrayList<>();
+            for (String lDishName:lDishNameList)
+            {
+                lDishList.add(new Dish(-1, lDishName));
+            }
+
             mWineViewModel.insert(
                     (Wine)data.getParcelableExtra(AddWineActivity.WINE_REPLY),
-                    lCepageList
+                    lCepageList, lDishList
             );
 
             Snackbar.make(findViewById(R.id.fab), "done", Snackbar.LENGTH_LONG)
@@ -114,7 +122,6 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
 
-        //mWineViewModel.getAllWines().observe(this, new Observer<List<Wine>>()
         mObserver = new Observer<List<Wine>>()
         {
             @Override

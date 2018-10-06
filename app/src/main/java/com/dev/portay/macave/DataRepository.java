@@ -181,25 +181,26 @@ public class DataRepository
 
     public void insertWine(Wine pWine)
     {
-        new insertWineAsyncTask(mWineDao,mCepageDao, new ArrayList<Cepage>()).execute(pWine);
+        new insertWineAsyncTask(mWineDao, new ArrayList<Cepage>(), new ArrayList<Dish>()).execute(pWine);
     }
 
-    public void insertWine(Wine pWine, List<Cepage> pCepageList)
+    public void insertWine(Wine pWine, List<Cepage> pCepageList, List<Dish> pDishList)
     {
-        new insertWineAsyncTask(mWineDao, mCepageDao, pCepageList).execute(pWine);
+        new insertWineAsyncTask(mWineDao, pCepageList, pDishList).execute(pWine);
     }
 
     private static class insertWineAsyncTask extends AsyncTask<Wine, Void, Long>
     {
         private WineDao mAsyncTaskDao;
         private List<Cepage> mCepageList;
-        private CepageDao mCepageDao;
+        private List<Dish> mDishList;
 
-        insertWineAsyncTask(WineDao pDao, CepageDao pCDao ,List<Cepage> pCepageList)
+
+        insertWineAsyncTask(WineDao pDao, List<Cepage> pCepageList, List<Dish> pDishList)
         {
             mAsyncTaskDao = pDao;
             mCepageList = pCepageList;
-            mCepageDao = pCDao;
+            mDishList = pDishList;
         }
 
         @Override
@@ -217,6 +218,12 @@ public class DataRepository
             {
                 lCepage.mWineId = aLong.intValue();
                 DataRepository.getDataRepository().insertCepage(lCepage);
+            }
+
+            for (Dish lDish:mDishList)
+            {
+                lDish.mWineId = aLong.intValue();
+                DataRepository.getDataRepository().insertDish(lDish);
             }
         }
     }

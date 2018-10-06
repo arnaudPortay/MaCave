@@ -25,6 +25,7 @@ public class AddWineActivity extends AppCompatActivity
 {
     public static final String WINE_REPLY = "com.dev.portay.macave.WINE_REPLY";
     public static final String CEPAGE_REPLY = "com.dev.portay.macave.CEPAGE_REPLY";
+    public static final String DISHES_REPLY = "com.dev.portay.macave.DISHES_REPLY";
 
     private EditText mEditWineNameView;
     private EditText mEditRegionView;
@@ -34,7 +35,8 @@ public class AddWineActivity extends AppCompatActivity
     private EditText mEditBottleNumberView;
     private int mYear;
     private Wine.WineColor mColor;
-    private ArrayList<String> mCepageNameList;
+    private static ArrayList<String> mCepageNameList;
+    private static ArrayList<String> mDishNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,7 +51,15 @@ public class AddWineActivity extends AppCompatActivity
         mYearSpinner = findViewById(R.id.yearSpinner);
         mColorSpinner = findViewById(R.id.colorSpinner);
         mEditBottleNumberView = findViewById(R.id.editBottleNumber);
-        mCepageNameList = new ArrayList<>();
+        if (mCepageNameList == null)
+        {
+            mCepageNameList = new ArrayList<>();
+        }
+
+        if (mDishNameList == null)
+        {
+            mDishNameList = new ArrayList<>();
+        }
 
         // Populate year spinner
         int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -99,6 +109,35 @@ public class AddWineActivity extends AppCompatActivity
         });
 
         // Cepage chips
+        for (String lCep: mCepageNameList)
+        {
+            if (!chipGroupHasChip((ChipGroup)findViewById(R.id.aw_cepage_chipgroup), lCep))// do nothing if dish already exists
+            {
+                // Create chip
+                Chip lChip = new Chip(this);
+                lChip.setText(lCep);
+                lChip.setCloseIconEnabled(true);
+                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                lChip.setCloseIconTintResource(android.R.color.background_light);
+                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        // delete chip
+                        mCepageNameList.remove(((Chip) view).getText().toString());
+                        ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).removeView(view);
+                    }
+                });
+
+                // Add chip to chipgroup
+                ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).addView(lChip, ((ChipGroup) findViewById(R.id.aw_cepage_chipgroup)).getChildCount() - 1);
+            }
+
+        }
+
         findViewById(R.id.aw_chip_addCepage).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -159,6 +198,95 @@ public class AddWineActivity extends AppCompatActivity
             }
         });
 
+        for (String lDish: mDishNameList)
+        {
+            if (!chipGroupHasChip((ChipGroup)findViewById(R.id.aw_dishes_chipgroup), lDish))// do nothing if dish already exists
+            {
+                // Create chip
+                Chip lChip = new Chip(this);
+                lChip.setText(lDish);
+                lChip.setCloseIconEnabled(true);
+                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                lChip.setCloseIconTintResource(android.R.color.background_light);
+                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        // delete chip
+                        mDishNameList.remove(((Chip) view).getText().toString());
+                        ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).removeView(view);
+                    }
+                });
+
+                // Add chip to chipgroup
+                ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).addView(lChip, ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).getChildCount() - 1);
+            }
+
+        }
+        // Dishes chips
+        findViewById(R.id.aw_chip_addDish).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View view)
+            {
+                AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
+                lBuilder.setTitle(R.string.add_suggested_dish_title);
+
+                final EditText lEdit = new EditText(view.getContext());
+                lBuilder.setView(lEdit);
+
+                lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        if (lEdit.getText().toString().compareTo("") != 0) // Do nothing if empty
+                        {
+                            if (!chipGroupHasChip((ChipGroup)findViewById(R.id.aw_dishes_chipgroup), lEdit.getText().toString()))// do nothing if dish already exists
+                            {
+                                // Create chip
+                                Chip lChip = new Chip(view.getContext());
+                                lChip.setText(lEdit.getText().toString());
+                                lChip.setCloseIconEnabled(true);
+                                lChip.setChipBackgroundColorResource(R.color.colorPrimary);
+                                lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                                lChip.setCloseIconTintResource(android.R.color.background_light);
+                                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        // delete chip
+                                        mDishNameList.remove(((Chip)view).getText().toString());
+                                        ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).removeView(view);
+                                    }
+                                });
+
+                                // Add chip to chipgroup and to list
+                                mDishNameList.add(lEdit.getText().toString());
+                                ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).addView(lChip, ((ChipGroup) findViewById(R.id.aw_dishes_chipgroup)).getChildCount() - 1);
+                            }
+                        }
+                    }
+                });
+
+                lBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        // Nothing to do
+                    }
+                });
+                AlertDialog lDialog = lBuilder.create();
+                lDialog.show();
+            }
+        });
+
 
 
 
@@ -196,8 +324,11 @@ public class AddWineActivity extends AppCompatActivity
                     lReplyIntent.putExtra(WINE_REPLY,
                             new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber));
                     lReplyIntent.putStringArrayListExtra(CEPAGE_REPLY, mCepageNameList);
+                    lReplyIntent.putStringArrayListExtra(DISHES_REPLY, mDishNameList);
                     setResult(RESULT_OK, lReplyIntent);
                     finish();
+                    mDishNameList.clear();
+                    mCepageNameList.clear();
                 }
             }
         });
