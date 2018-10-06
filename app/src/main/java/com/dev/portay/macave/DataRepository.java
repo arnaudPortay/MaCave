@@ -6,8 +6,10 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.dev.portay.macave.db.CellarDatabase;
+import com.dev.portay.macave.db.dao.CepageDao;
 import com.dev.portay.macave.db.dao.DishDao;
 import com.dev.portay.macave.db.dao.WineDao;
+import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
@@ -24,6 +26,7 @@ public class DataRepository
     private WineDao mWineDao;
     private LiveData<List<Wine>> mWines;
     private DishDao mDishDao;
+    private CepageDao mCepageDao;
 
     /************** FUNCTIONS **************/
     public static DataRepository getDataRepository(Application pApplication)
@@ -52,6 +55,7 @@ public class DataRepository
         mWineDao = lDatabase.mWineDao();
         mWines = mWineDao.getAllWines();
         mDishDao = lDatabase.mDishDao();
+        mCepageDao = lDatabase.mCepageDao();
     }
 
     // Wrapper
@@ -121,6 +125,55 @@ public class DataRepository
         protected Void doInBackground(Dish... dishes)
         {
             mDishDao.deleteDish(dishes[0]);
+            return null;
+        }
+    }
+
+    LiveData<List<Cepage>> getCepageByWineId(final int pWineId)
+    {
+        return mCepageDao.getCepageByWineId(pWineId);
+    }
+
+    public void insertCepage(Cepage pCepage)
+    {
+        new insertCepageAsyncTask(mCepageDao).execute(pCepage);
+    }
+
+    private static class insertCepageAsyncTask extends AsyncTask<Cepage, Void, Void>
+    {
+        private CepageDao mCepageDao;
+
+        insertCepageAsyncTask(CepageDao pCepage)
+        {
+            mCepageDao = pCepage;
+        }
+
+        @Override
+        protected Void doInBackground(Cepage... cepages)
+        {
+            mCepageDao.insert(cepages[0]);
+            return null;
+        }
+    }
+
+    public void deleteCepage(Cepage pCepage)
+    {
+        new deleteCepageAsyncTask(mCepageDao).execute(pCepage);
+    }
+
+    private static class deleteCepageAsyncTask extends AsyncTask<Cepage, Void, Void>
+    {
+        private CepageDao mCepageDao;
+
+        deleteCepageAsyncTask(CepageDao pCepageDao)
+        {
+            mCepageDao = pCepageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Cepage... cepages)
+        {
+            mCepageDao.deleteCepage(cepages[0]);
             return null;
         }
     }
