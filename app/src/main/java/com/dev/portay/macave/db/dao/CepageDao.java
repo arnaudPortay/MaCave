@@ -20,6 +20,9 @@ public interface CepageDao
     @Query("SELECT * FROM cepage_table WHERE wine_id = :pId")
     LiveData<List<Cepage>> getCepageByWineId(int pId);
 
+    @Query("SELECT cepage_name FROM cepage_table")
+    LiveData<List<String>> getAllCepageNames();
+
     @Delete
     void deleteCepage(Cepage pCepage);
 }

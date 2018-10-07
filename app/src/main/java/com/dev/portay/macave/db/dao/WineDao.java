@@ -36,4 +36,13 @@ public interface WineDao
 
     @Query("SELECT * FROM wine_table WHERE rebuy = 1")
     LiveData<List<Wine>> getWinesToBuy();
+
+    @Query("SELECT name FROM wine_table")
+    LiveData<List<String>> getAllWineNames();
+
+    @Query("SELECT producer FROM wine_table")
+    LiveData<List<String>> getAllWineProducers();
+
+    @Query("SELECT origin FROM wine_table")
+    LiveData<List<String>> getAllWineOrigins();
 }

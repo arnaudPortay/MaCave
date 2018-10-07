@@ -14,14 +14,19 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A fragment representing a single Wine detail screen.
@@ -35,6 +40,7 @@ public class WineDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private List<String> mDishesNames;
 
 
     /**
@@ -48,9 +54,22 @@ public class WineDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mDishesNames = new ArrayList<>();
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
+            DataRepository.getDataRepository().getAllDishesName().observe(this, new Observer<List<String>>()
+            {
+                @Override
+                public void onChanged(@Nullable List<String> strings)
+                {
+                    // Getting rid of duplicates
+                    Set<String> lSet = new HashSet<>();
+                    lSet.addAll(strings);
+                    mDishesNames.clear();
+                    mDishesNames.addAll(lSet);
+                }
+            });
             ViewModelProviders.of(this).get(WineViewModel.class)
                     .getWineById(getArguments().getInt(ARG_ITEM_ID))
                     .observe(this, new Observer<List<Wine>>()
@@ -200,7 +219,10 @@ public class WineDetailFragment extends Fragment {
                                         AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                                         lBuilder.setTitle(R.string.add_suggested_dish_title);
 
-                                        final EditText lEdit = new EditText(view.getContext());
+                                        ArrayAdapter<String> lAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                                        final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
+                                        lEdit.setAdapter(lAdapter);
+
                                         lBuilder.setView(lEdit);
 
                                         lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
@@ -226,7 +248,18 @@ public class WineDetailFragment extends Fragment {
                                                 // Nothing to do
                                             }
                                         });
-                                        AlertDialog lDialog = lBuilder.create();
+                                        final AlertDialog lDialog = lBuilder.create();
+                                        lEdit.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+                                            @Override
+                                            public void onFocusChange(View view, boolean hasFocus)
+                                            {
+                                                if (hasFocus)
+                                                {
+                                                    lDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                                }
+                                            }
+                                        });
+
                                         lDialog.show();
                                     }
                                 });

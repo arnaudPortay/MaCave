@@ -279,4 +279,31 @@ public class DataRepository
             return null;
         }
     }
+
+    public LiveData<List<String>> getAllDishesName()
+    {
+        return mDishDao.getAllDishesName();
+    }
+
+    public LiveData<List<String>> getAllCepageNames()
+    {
+        return mCepageDao.getAllCepageNames();
+    }
+
+    public LiveData<List<String>> getAllWineNames()
+    {
+        return mWineDao.getAllWineNames();
+    }
+
+    public LiveData<List<String>> getAllWineProducers()
+    {
+        return mWineDao.getAllWineProducers();
+    }
+
+    public LiveData<List<String>> getAllWineOrigins()
+    {
+        return mWineDao.getAllWineOrigins();
+
+
+    }
 }

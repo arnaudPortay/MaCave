@@ -1,15 +1,20 @@
 package com.dev.portay.macave;
 
+import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -20,6 +25,9 @@ import com.dev.portay.macave.util.MySpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AddWineActivity extends AppCompatActivity
 {
@@ -27,18 +35,25 @@ public class AddWineActivity extends AppCompatActivity
     public static final String CEPAGE_REPLY = "com.dev.portay.macave.CEPAGE_REPLY";
     public static final String DISHES_REPLY = "com.dev.portay.macave.DISHES_REPLY";
 
-    private EditText mEditWineNameView;
-    private EditText mEditRegionView;
-    private EditText mEditProducerView;
+    private AutoCompleteTextView mEditWineNameView;
+    private AutoCompleteTextView mEditRegionView;
+    private AutoCompleteTextView mEditProducerView;
     private Spinner mYearSpinner;
     private Spinner mColorSpinner;
     private EditText mEditBottleNumberView;
     private int mYear;
     private Wine.WineColor mColor;
 
+    private List<String> mDishesNames; // for auto completion
+    private List<String> mCepageNames; // for auto completion
+    private List<String> mWineNames; // for auto completion
+    private List<String> mProducerNames; // for auto completion
+    private List<String> mOrigins; // for auto completion
+
     // Statics to keep data when rebuilding due to orientation change
     private static ArrayList<String> mCepageNameList;
     private static ArrayList<String> mDishNameList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,6 +77,87 @@ public class AddWineActivity extends AppCompatActivity
         {
             mDishNameList = new ArrayList<>();
         }
+
+        DataRepository lRepo = DataRepository.getDataRepository();
+        // Populate autocomplete dishes list
+        mDishesNames = new ArrayList<>();
+        lRepo.getAllDishesName().observe(this, new Observer<List<String>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<String> strings)
+            {
+                // Getting rid of duplicates
+                Set<String> lSet = new HashSet<>();
+                lSet.addAll(strings);
+                mDishesNames.clear();
+                mDishesNames.addAll(lSet);
+            }
+        });
+
+        // Populate autocomplete cepage list
+        mCepageNames = new ArrayList<>();
+        lRepo.getAllCepageNames().observe(this, new Observer<List<String>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<String> strings)
+            {
+                //Getting rid of duplicates
+                Set<String> lSet = new HashSet<>();
+                lSet.addAll(strings);
+                mCepageNames.clear();
+                mCepageNames.addAll(lSet);
+            }
+        });
+
+        // Populate autocomplete wine name list
+        mWineNames = new ArrayList<>();
+        lRepo.getAllWineNames().observe(this, new Observer<List<String>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<String> strings)
+            {
+                //Getting rid of duplicates
+                Set<String> lSet = new HashSet<>();
+                lSet.addAll(strings);
+                mWineNames.clear();
+                mWineNames.addAll(lSet);
+                mEditWineNameView.setAdapter(new ArrayAdapter<>(mEditWineNameView.getContext(), android.R.layout.simple_dropdown_item_1line, mWineNames));
+            }
+        });
+
+
+        // Populate autocomplete producer name list
+        mProducerNames = new ArrayList<>();
+        lRepo.getAllWineProducers().observe(this, new Observer<List<String>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<String> strings)
+            {
+                //Getting rid of duplicates
+                Set<String> lSet = new HashSet<>();
+                lSet.addAll(strings);
+                mProducerNames.clear();
+                mProducerNames.addAll(lSet);
+                mEditProducerView.setAdapter(new ArrayAdapter<>(mEditProducerView.getContext(), android.R.layout.simple_dropdown_item_1line, mProducerNames));
+            }
+        });
+
+        // Populate autocomplete origins list
+        mOrigins = new ArrayList<>();
+        lRepo.getAllWineOrigins().observe(this, new Observer<List<String>>()
+        {
+            @Override
+            public void onChanged(@Nullable List<String> strings)
+            {
+                //Getting rid of duplicates
+                Set<String> lSet = new HashSet<>();
+                lSet.addAll(strings);
+                mOrigins.clear();
+                mOrigins.addAll(lSet);
+                mEditRegionView.setAdapter(new ArrayAdapter<>(mEditRegionView.getContext(), android.R.layout.simple_dropdown_item_1line, mOrigins));
+            }
+        });
+
 
         // Populate year spinner
         int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -154,8 +250,11 @@ public class AddWineActivity extends AppCompatActivity
                 AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                 lBuilder.setTitle(R.string.add_cepage);
 
-                final EditText lEdit = new EditText(view.getContext());
+                ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
+                lEdit.setAdapter(lAdapter);
                 lBuilder.setView(lEdit);
+
 
                 lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
                 {
@@ -201,7 +300,17 @@ public class AddWineActivity extends AppCompatActivity
                         // Nothing to do
                     }
                 });
-                AlertDialog lDialog = lBuilder.create();
+                final AlertDialog lDialog = lBuilder.create();
+                lEdit.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus)
+                    {
+                        if (hasFocus)
+                        {
+                            lDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
+                    }
+                });
                 lDialog.show();
             }
         });
@@ -249,7 +358,9 @@ public class AddWineActivity extends AppCompatActivity
                 AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                 lBuilder.setTitle(R.string.add_suggested_dish_title);
 
-                final EditText lEdit = new EditText(view.getContext());
+                ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
+                lEdit.setAdapter(lAdapter);
                 lBuilder.setView(lEdit);
 
                 lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
@@ -296,7 +407,17 @@ public class AddWineActivity extends AppCompatActivity
                         // Nothing to do
                     }
                 });
-                AlertDialog lDialog = lBuilder.create();
+                final AlertDialog lDialog = lBuilder.create();
+                lEdit.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus)
+                    {
+                        if (hasFocus)
+                        {
+                            lDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
+                    }
+                });
                 lDialog.show();
             }
         });
