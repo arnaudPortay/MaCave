@@ -23,9 +23,129 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+            </android.support.v7.widget.Toolbar>
+
+            <HorizontalScrollView
+                android:id="@+id/search_scrollview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone">
+
+                <android.support.design.chip.ChipGroup
+                    android:id="@+id/search_chipgroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:singleLine="true">
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_name"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:text="@string/m_winename"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_origin"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:text="@string/m_origin"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_producer"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:text="@string/m_producer"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_year"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_year"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_color"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_color"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_bottles"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_bottlenumber"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_cepage"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_cepage"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_dishes"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_dishes"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
+                </android.support.design.chip.ChipGroup>
+            </HorizontalScrollView>
 
         </android.support.design.widget.AppBarLayout>
+
+
 
         <FrameLayout
             android:id="@+id/frameLayout"

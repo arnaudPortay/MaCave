@@ -195,6 +195,24 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                findViewById(R.id.search_scrollview).setVisibility(View.GONE);
+                return false;
+            }
+        });
+        searchView.setOnSearchClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                findViewById(R.id.search_scrollview).setVisibility(View.VISIBLE);
+            }
+        });
+
 
         return true;
     }

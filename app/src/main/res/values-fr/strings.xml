@@ -34,4 +34,12 @@
     <string name="dish_suggestion">Suggestions de plats :</string>
     <string name="add_cepage">Ajouter un cépage</string>
     <string name="cepage">Cépages :</string>
+    <string name="m_winename">Nom</string>
+    <string name="m_color">Couleur</string>
+    <string name="m_origin">Origine</string>
+    <string name="m_year">Année</string>
+    <string name="m_producer">Producteur</string>
+    <string name="m_bottlenumber">Bouteilles</string>
+    <string name="m_cepage">Cépages</string>
+    <string name="m_dishes">Plats</string>
 </resources>
