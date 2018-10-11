@@ -10,7 +10,6 @@ import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -77,9 +76,6 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                     (Wine)data.getParcelableExtra(AddWineActivity.WINE_REPLY),
                     lCepageList, lDishList
             );
-
-            Snackbar.make(findViewById(R.id.fab), "done", Snackbar.LENGTH_LONG)
-                  .setAction("Action", null).show();
         }
     }
 
