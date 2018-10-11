@@ -306,4 +306,15 @@ public class DataRepository
 
 
     }
+
+    // Synchronous method, only call from non UI thread
+    List<Dish> getDishesByWineIdSync(int pWineId)
+    {
+        return mDishDao.getDishesByWineIdSync(pWineId);
+    }
+
+    List<Cepage> getCepageByWineIdSync(int pId)
+    {
+        return mCepageDao.getCepageByWineIdSync(pId);
+    }
 }

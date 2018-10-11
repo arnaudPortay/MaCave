@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -48,6 +50,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
     private List<Wine> mWines; // Cached Data for searchview. Kinda ugly, find another way to do this ?
     private DrawerLayout mDrawerLayout;
     private Observer<List<Wine>> mObserver;
+    private SearchView mSearchView;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -193,9 +196,9 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
     {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(new SearchView.OnCloseListener()
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener()
         {
             @Override
             public boolean onClose()
@@ -204,7 +207,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                 return false;
             }
         });
-        searchView.setOnSearchClickListener(new View.OnClickListener()
+        mSearchView.setOnSearchClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -213,6 +216,18 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             }
         });
 
+        ChipGroup lGroup = findViewById(R.id.search_chipgroup);
+        for (int i = 0; i < lGroup.getChildCount(); i++)
+        {
+            lGroup.getChildAt(i).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    onQueryTextChange(mSearchView.getQuery().toString());
+                }
+            });
+        }
 
         return true;
     }
@@ -242,70 +257,136 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
         return false;
     }
 
+    private String replaceAccents(String pString)
+    {
+        pString = pString.replaceAll("[àâ]", "a");
+        pString = pString.replaceAll("[éèêë]", "e");
+        pString = pString.replaceAll("[îï]", "i");
+        pString = pString.replaceAll("[ôö]", "o");
+        pString = pString.replaceAll("[ùûü]", "u");
 
+        return pString;
+    }
 
     private List<Wine> filter(List<Wine> pWines, String pQuery)
     {
-        String lLowerCaseQuery = pQuery.toLowerCase();
-        final  List<Wine> lFilteredList = new ArrayList<>();
-
-        // Get rid of accents
-        lLowerCaseQuery = lLowerCaseQuery.replaceAll("[àâ]", "a");
-        lLowerCaseQuery = lLowerCaseQuery.replaceAll("[éèêë]", "e");
-        lLowerCaseQuery = lLowerCaseQuery.replaceAll("[îï]", "i");
-        lLowerCaseQuery = lLowerCaseQuery.replaceAll("[ôö]", "o");
-        lLowerCaseQuery = lLowerCaseQuery.replaceAll("[ùûü]", "u");
-
-        for (Wine lWine : pWines)
+        if (!pQuery.isEmpty())
         {
-            // Replace Name accents
-            String lName = lWine.getName().toLowerCase();
+            String lLowerCaseQuery = replaceAccents(pQuery.toLowerCase());
+            final List<Wine> lFilteredList = new ArrayList<>();
 
-            lName = lName.replaceAll("[àâ]", "a");
-            lName = lName.replaceAll("[éèêë]", "e");
-            lName = lName.replaceAll("[îï]", "i");
-            lName = lName.replaceAll("[ôö]", "o");
-            lName = lName.replaceAll("[ùûü]", "u");
-
-            // Replace Origin accents
-            String lOrigin = lWine.getOrigin().toLowerCase();
-
-            lOrigin = lOrigin.replaceAll("[àâ]", "a");
-            lOrigin = lOrigin.replaceAll("[éèêë]", "e");
-            lOrigin = lOrigin.replaceAll("[îï]", "i");
-            lOrigin = lOrigin.replaceAll("[ôö]", "o");
-            lOrigin = lOrigin.replaceAll("[ùûü]", "u");
-
-            // Replace Producer accents
-            String lProducer = lWine.getProducer().toLowerCase();
-
-            lProducer = lProducer.replaceAll("[àâ]", "a");
-            lProducer = lProducer.replaceAll("[éèêë]", "e");
-            lProducer = lProducer.replaceAll("[îï]", "i");
-            lProducer = lProducer.replaceAll("[ôö]", "o");
-            lProducer = lProducer.replaceAll("[ùûü]", "u");
-
-            //Replace Color accents
-            String lColor = getResources().getString(Wine.getStringIdFromColor(lWine.getColor())).toLowerCase();
-
-            lColor = lColor.replaceAll("[àâ]", "a");
-            lColor = lColor.replaceAll("[éèêë]", "e");
-            lColor = lColor.replaceAll("[îï]", "i");
-            lColor = lColor.replaceAll("[ôö]", "o");
-            lColor = lColor.replaceAll("[ùûü]", "u");
-
-            // Check if query matches any field
-            if (    lName.contains(lLowerCaseQuery) && !lWine.getName().isEmpty()
-                    || lOrigin.contains(lLowerCaseQuery) && !lWine.getOrigin().isEmpty()
-                    || lProducer.contains(lLowerCaseQuery) && !lWine.getProducer().isEmpty()
-                    || String.format("%d",lWine.getYear()).contains(lLowerCaseQuery)
-                    || String.format("%d", lWine.getBottleNumber()).contains(lLowerCaseQuery)
-                    || lColor.contains(lLowerCaseQuery))
+            for (Wine lWine : pWines)
             {
-                lFilteredList.add(lWine);
+                if (((Chip) findViewById(R.id.m_chip_name)).isChecked())
+                {
+                    // Replace Name accents
+                    String lName = replaceAccents(lWine.getName().toLowerCase());
+
+                    if (lName.contains(lLowerCaseQuery) && !lWine.getName().isEmpty())
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_origin)).isChecked())
+                {
+                    // Replace Origin accents
+                    String lOrigin = replaceAccents(lWine.getOrigin().toLowerCase());
+
+                    if (lOrigin.contains(lLowerCaseQuery) && !lWine.getOrigin().isEmpty())
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_producer)).isChecked())
+                {
+                    // Replace Producer accents
+                    String lProducer = replaceAccents(lWine.getProducer().toLowerCase());
+
+                    if (lProducer.contains(lLowerCaseQuery) && !lWine.getProducer().isEmpty())
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_color)).isChecked())
+                {
+                    //Replace Color accents
+                    String lColor = replaceAccents(getResources().getString(Wine.getStringIdFromColor(lWine.getColor())).toLowerCase());
+
+                    if (lColor.contains(lLowerCaseQuery))
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_year)).isChecked())
+                {
+                    if (String.format("%d", lWine.getYear()).contains(lLowerCaseQuery))
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_bottles)).isChecked())
+                {
+                    if (String.format("%d", lWine.getBottleNumber()).contains(lLowerCaseQuery))
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_dishes)).isChecked())
+                {
+                    List<Dish> lDishes = DataRepository.getDataRepository().getDishesByWineIdSync(lWine.getId());
+                    boolean lHasQuery = false;
+
+                    for (Dish lDish : lDishes)
+                    {
+                        String lDishName = replaceAccents(lDish.mDishName.toLowerCase());
+
+                        if (lDishName.contains(lLowerCaseQuery))
+                        {
+                            lFilteredList.add(lWine);
+                            lHasQuery = true;
+                            break;
+                        }
+                    }
+
+                    if (lHasQuery)
+                    {
+                        continue;
+                    }
+
+                }
+
+                if (((Chip) findViewById(R.id.m_chip_cepage)).isChecked())
+                {
+                    List<Cepage> lCepages = DataRepository.getDataRepository().getCepageByWineIdSync(lWine.getId());
+
+                    for (Cepage lCepage : lCepages)
+                    {
+                        String lCepageName = replaceAccents(lCepage.mCepageName.toLowerCase());
+
+                        if (lCepageName.contains(lLowerCaseQuery))
+                        {
+                            lFilteredList.add(lWine);
+                            break;
+                        }
+                    }
+
+                }
             }
+            return lFilteredList;
         }
-        return lFilteredList;
+        return pWines;
     }
 
     private class FilterAsync extends AsyncTask<Void, Void, List<Wine>>
