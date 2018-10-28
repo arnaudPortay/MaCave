@@ -45,4 +45,7 @@ public interface WineDao
 
     @Query("SELECT origin FROM wine_table")
     LiveData<List<String>> getAllWineOrigins();
+
+    @Query("SELECT * FROM wine_table WHERE consumption_date <= :pConsumptionDate AND bottle_number != 0")
+    LiveData<List<Wine>> getWinesToDrink(int pConsumptionDate);
 }

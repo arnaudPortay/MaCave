@@ -165,6 +165,11 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                             mWineViewModel.getAllWines().removeObserver(mObserver);
                         }
 
+                        if (mWineViewModel.getWinesToDrink().hasObservers())
+                        {
+                            mWineViewModel.getWinesToDrink().removeObserver(mObserver);
+                        }
+
                         if (menuItem.getItemId() == R.id.nav_cellar)
                         {
                             mWineViewModel.getWinesWithBottles().observe(CellarListActivity.this, mObserver);
@@ -181,6 +186,12 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                         {
                             mWineViewModel.getAllWines().observe(CellarListActivity.this, mObserver);
                             getSupportActionBar().setTitle(R.string.nav_all_wines);
+                        }
+
+                        if (menuItem.getItemId() == R.id.nav_to_drink)
+                        {
+                            mWineViewModel.getWinesToDrink().observe(CellarListActivity.this, mObserver);
+                            getSupportActionBar().setTitle(R.string.nav_drink_list);
                         }
 
                         return true;

@@ -14,6 +14,7 @@ import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -79,6 +80,11 @@ public class DataRepository
     LiveData<List<Wine>> getWinesToBuy()
     {
         return mWineDao.getWinesToBuy();
+    }
+
+    LiveData<List<Wine>> getWinesToDrink()
+    {
+        return mWineDao.getWinesToDrink(Calendar.getInstance().get(Calendar.YEAR));
     }
 
     LiveData<List<Dish>> getDishesByWineId(final int pWineId)
@@ -306,6 +312,7 @@ public class DataRepository
 
 
     }
+
 
     // Synchronous method, only call from non UI thread
     List<Dish> getDishesByWineIdSync(int pWineId)

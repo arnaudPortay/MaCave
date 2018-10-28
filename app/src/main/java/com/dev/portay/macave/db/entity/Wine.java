@@ -43,6 +43,9 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     @ColumnInfo(name = "rebuy")
     private boolean mRebuy;
 
+    @ColumnInfo(name = "consumption_date")
+    private int mConsumptionDate;
+
 
 
     // TODO: Add the labelUri getters & setters and uncomment import statement
@@ -89,6 +92,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         mBottleNumber = pIn.readInt();
         mOrigin = pIn.readString();
         mRebuy = pIn.readInt() != 0;
+        mConsumptionDate = pIn.readInt();
     }
 
     @Override
@@ -102,6 +106,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         parcel.writeInt(mBottleNumber);
         parcel.writeString(mOrigin);
         parcel.writeInt(mRebuy ? 1 : 0);
+        parcel.writeInt(mConsumptionDate);
     }
 
     public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>()
@@ -124,7 +129,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     }
 
     /* * Constructor * */
-    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer, int mYear, int mBottleNumber)
+    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer, int mYear, int mBottleNumber, int mConsumptionDate)
     {
         this.mName = mName;
         this.mOrigin = mOrigin;
@@ -133,6 +138,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         this.mYear = mYear;
         this.mBottleNumber = mBottleNumber;
         this.mRebuy = false; // By default you're adding the wine so you have some and don't need to rebuy right away
+        this.mConsumptionDate = mConsumptionDate;
     }
 
     /* * Getters & Setters * */
@@ -214,6 +220,16 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     public void setRebuy(boolean pRebuy)
     {
         this.mRebuy = pRebuy;
+    }
+
+    public int getConsumptionDate()
+    {
+        return mConsumptionDate;
+    }
+
+    public void setConsumptionDate(int pConsumptionDate)
+    {
+        this.mConsumptionDate = pConsumptionDate;
     }
 
     public static int getStringIdFromColor(WineColor pColor)

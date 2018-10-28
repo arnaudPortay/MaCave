@@ -45,6 +45,11 @@ public class WineViewModel extends AndroidViewModel
         return mRepository.getWinesToBuy();
     }
 
+    LiveData<List<Wine>> getWinesToDrink()
+    {
+        return  mRepository.getWinesToDrink();
+    }
+
     public void insert(Wine pWine)
     {
         mRepository.insertWine(pWine);

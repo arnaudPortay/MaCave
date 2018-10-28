@@ -80,15 +80,15 @@ public abstract class CellarDatabase extends RoomDatabase
             mWineDao.deleteAll();
 
             mWineDao.insert(
-                    new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi",1992,7)
+                    new Wine("toto", "bourgogne", Wine.WineColor.eRed,"titi",1992,7, 2017)
             );
 
             mWineDao.insert(
-                    new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère", 1955,4)
+                    new Wine("pore", "champange", Wine.WineColor.eWhite,"ta mère", 1955,4, 2000)
             );
 
             mWineDao.insert(
-                    new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6)
+                    new Wine("aae", "Chateaux de la loire", Wine.WineColor.eChampagne,"Chateaux Margot propriété Rotschild du cul blablabla bba", 1996,6, 2020)
             );
 
             /*for (int i = 0; i < 300; i++)

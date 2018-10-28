@@ -42,4 +42,5 @@
     <string name="m_bottlenumber">Bouteilles</string>
     <string name="m_cepage">Cépages</string>
     <string name="m_dishes">Plats</string>
+    <string name="nav_drink_list">A Consommer</string>
 </resources>

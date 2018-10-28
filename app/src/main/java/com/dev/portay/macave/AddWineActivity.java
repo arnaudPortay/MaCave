@@ -457,7 +457,7 @@ public class AddWineActivity extends AppCompatActivity
                     int lBottleNumber = Integer.parseInt(mEditBottleNumberView.getText().toString());
 
                     lReplyIntent.putExtra(WINE_REPLY,
-                            new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber));
+                            new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber,2018));
                     lReplyIntent.putStringArrayListExtra(CEPAGE_REPLY, mCepageNameList);
                     lReplyIntent.putStringArrayListExtra(DISHES_REPLY, mDishNameList);
                     setResult(RESULT_OK, lReplyIntent);

@@ -6,6 +6,9 @@
             android:title="@string/nav_cellar"
             android:checked="true"/>
         <item
+            android:id="@+id/nav_to_drink"
+            android:title="@string/nav_drink_list"/>
+        <item
             android:id="@+id/nav_buy_list"
             android:title="@string/nav_buy_list" />
         <item
