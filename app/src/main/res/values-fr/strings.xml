@@ -45,4 +45,5 @@
     <string name="nav_drink_list">A Consommer</string>
     <string name="consumption_date">A consommer en :</string>
     <string name="m_consumption_date">Date de consommation</string>
+    <string name="add">Ajouter</string>
 </resources>
