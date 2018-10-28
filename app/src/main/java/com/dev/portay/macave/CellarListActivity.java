@@ -128,6 +128,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             {
                 mWines = pWines;
                 lListAdapter.setWines(pWines);
+                onQueryTextChange(mSearchView.getQuery().toString());
             }
         };
         mWineViewModel.getWinesWithBottles().observe(this, mObserver);
