@@ -172,7 +172,11 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.color_detail))
                                         .setText(Wine.getStringIdFromColor(wines.get(0).getColor()));
 
-                                // Set suggested dished
+                                // Set Consumption Date
+                                ((TextView) getView().findViewById(R.id.consumption_date_detail))
+                                        .setText(String.format("%d", wines.get(0).getConsumptionDate()));
+
+                                // Set suggested dishes
                                 DataRepository.getDataRepository().getDishesByWineId(wines.get(0).getId()).observe(WineDetailFragment.this, new Observer<List<Dish>>()
                                 {
                                     @Override
@@ -264,7 +268,7 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
 
-                                // Set suggested dished
+                                // Set suggested dishes
                                 DataRepository.getDataRepository().getCepageByWineId(wines.get(0).getId()).observe(WineDetailFragment.this, new Observer<List<Cepage>>()
                                 {
                                     @Override
