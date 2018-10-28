@@ -140,6 +140,18 @@
                         app:chipBackgroundColor="@color/colorSecondary"
                         app:textStartPadding="2dp" />
 
+                    <android.support.design.chip.Chip
+                        android:id="@+id/m_chip_consumption"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="@string/m_consumption_date"
+                        android:textColor="@android:color/white"
+                        app:checkedIcon="@drawable/ic_check_white_24dp"
+                        app:chipBackgroundColor="@color/colorSecondary"
+                        app:textStartPadding="2dp" />
+
                 </android.support.design.chip.ChipGroup>
             </HorizontalScrollView>
 

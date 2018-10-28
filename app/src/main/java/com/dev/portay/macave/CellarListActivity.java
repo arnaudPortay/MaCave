@@ -351,6 +351,15 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                     }
                 }
 
+                if (((Chip) findViewById(R.id.m_chip_consumption)).isChecked())
+                {
+                    if (String.format("%d", lWine.getConsumptionDate()).contains(lLowerCaseQuery))
+                    {
+                        lFilteredList.add(lWine);
+                        continue;
+                    }
+                }
+
                 if (((Chip) findViewById(R.id.m_chip_dishes)).isChecked())
                 {
                     List<Dish> lDishes = DataRepository.getDataRepository().getDishesByWineIdSync(lWine.getId());
