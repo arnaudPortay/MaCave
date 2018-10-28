@@ -40,8 +40,10 @@ public class AddWineActivity extends AppCompatActivity
     private AutoCompleteTextView mEditProducerView;
     private Spinner mYearSpinner;
     private Spinner mColorSpinner;
+    private Spinner mConsumptionDateSpinner;
     private EditText mEditBottleNumberView;
     private int mYear;
+    private int mConsumptionDate;
     private Wine.WineColor mColor;
 
     private List<String> mDishesNames; // for auto completion
@@ -67,6 +69,7 @@ public class AddWineActivity extends AppCompatActivity
         mEditProducerView = findViewById(R.id.editProducer);
         mYearSpinner = findViewById(R.id.yearSpinner);
         mColorSpinner = findViewById(R.id.colorSpinner);
+        mConsumptionDateSpinner = findViewById(R.id.consumptionDateSpinner);
         mEditBottleNumberView = findViewById(R.id.editBottleNumber);
         if (mCepageNameList == null)
         {
@@ -180,6 +183,29 @@ public class AddWineActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> adapterView)
             {
                 //Nothing to do
+            }
+        });
+
+        // Populate consumption date spinner
+        MySpinnerAdapter<Integer> lConsumptionDateAdapter = new MySpinnerAdapter<>(this, android.R.layout.simple_spinner_item);
+
+        for (int i = lCurrentYear; i < lCurrentYear + 30; i++)
+        {
+            lConsumptionDateAdapter.add(i);
+        }
+        mConsumptionDateSpinner.setAdapter(lConsumptionDateAdapter);
+        mConsumptionDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                mConsumptionDate = (int)adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView)
+            {
+                // Nothing to do
             }
         });
 
@@ -457,7 +483,7 @@ public class AddWineActivity extends AppCompatActivity
                     int lBottleNumber = Integer.parseInt(mEditBottleNumberView.getText().toString());
 
                     lReplyIntent.putExtra(WINE_REPLY,
-                            new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber,2018));
+                            new Wine(lName, lOrigin, mColor, lProducer, mYear, lBottleNumber,mConsumptionDate));
                     lReplyIntent.putStringArrayListExtra(CEPAGE_REPLY, mCepageNameList);
                     lReplyIntent.putStringArrayListExtra(DISHES_REPLY, mDishNameList);
                     setResult(RESULT_OK, lReplyIntent);
