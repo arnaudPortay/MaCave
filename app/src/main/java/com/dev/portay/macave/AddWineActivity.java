@@ -3,13 +3,20 @@ package com.dev.portay.macave;
 import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -23,8 +30,12 @@ import com.dev.portay.macave.db.entity.Wine;
 import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +45,7 @@ public class AddWineActivity extends AppCompatActivity
     public static final String WINE_REPLY = "com.dev.portay.macave.WINE_REPLY";
     public static final String CEPAGE_REPLY = "com.dev.portay.macave.CEPAGE_REPLY";
     public static final String DISHES_REPLY = "com.dev.portay.macave.DISHES_REPLY";
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private AutoCompleteTextView mEditWineNameView;
     private AutoCompleteTextView mEditRegionView;
@@ -52,16 +64,68 @@ public class AddWineActivity extends AppCompatActivity
     private List<String> mProducerNames; // for auto completion
     private List<String> mOrigins; // for auto completion
 
+    private static String mPreviousPhotoPath;
+    private static String mCurrentPhotoPath;
+
     // Statics to keep data when rebuilding due to orientation change
     private static ArrayList<String> mCepageNameList;
     private static ArrayList<String> mDishNameList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wine);
+
+        // Hide the Take Picture button if device has no camera
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
+        {
+            findViewById(R.id.cameraButton).setVisibility(View.GONE);
+        }
+        else
+        {
+            findViewById(R.id.cameraButton).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent lTakePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    // Check if there is an app that can handle the intent
+                    if (lTakePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+                        File lPhotoFile = null;
+                        try
+                        {
+                            // Create file
+                            lPhotoFile = createImageFile();
+                        }
+                        catch (IOException lErr)
+                        {
+                            Log.e("APY", "Error Creating Photo File in AddWineActivity");
+                        }
+
+                        if (lPhotoFile != null)
+                        {
+                            // Define where the image is going to be saved
+                            Uri lPhotoUri = FileProvider.getUriForFile(getBaseContext(), "com.dev.portay.macave.fileprovider", lPhotoFile);
+                            // Redirect output to our path
+                            lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, lPhotoUri);
+
+                            // Grant permission to all relevant apps. Default should be the classic camera app
+                            List<ResolveInfo> resInfoList = view.getContext().getPackageManager().queryIntentActivities(lTakePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                            for (ResolveInfo resolveInfo : resInfoList) {
+                                String packageName = resolveInfo.activityInfo.packageName;
+                                view.getContext().grantUriPermission(packageName, lPhotoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            }
+
+                            // Start the default app for taking pictures
+                            startActivityForResult(lTakePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        }
+                    }
+                }
+            });
+        }
 
         // Set Members
         mEditWineNameView = findViewById(R.id.editName);
@@ -79,6 +143,16 @@ public class AddWineActivity extends AppCompatActivity
         if (mDishNameList == null)
         {
             mDishNameList = new ArrayList<>();
+        }
+
+        if (mPreviousPhotoPath == null)
+        {
+            mPreviousPhotoPath = "";
+        }
+
+        if (mCurrentPhotoPath == null)
+        {
+            mCurrentPhotoPath = "";
         }
 
         DataRepository lRepo = DataRepository.getDataRepository();
@@ -492,6 +566,9 @@ public class AddWineActivity extends AppCompatActivity
                     // Clear Lists for next wine
                     mDishNameList.clear();
                     mCepageNameList.clear();
+
+                    mPreviousPhotoPath = "";
+                    mCurrentPhotoPath = "";
                 }
             }
         });
@@ -517,6 +594,62 @@ public class AddWineActivity extends AppCompatActivity
         mDishNameList.clear();
         mCepageNameList.clear();
 
+        if (mPreviousPhotoPath.compareTo("")!= 0 )
+        {
+            // Delete previous picture
+            File lFile = new File(mPreviousPhotoPath);
+            lFile.delete();
+        }
+
+        if (mCurrentPhotoPath.compareTo("")!= 0 )
+        {
+            // Delete current picture
+            File lFile = new File(mCurrentPhotoPath);
+            lFile.delete();
+        }
+
+        mCurrentPhotoPath = "";
+        mPreviousPhotoPath = "";
+
         super.onBackPressed();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        if (requestCode == REQUEST_IMAGE_CAPTURE)
+        {
+            if (resultCode == RESULT_CANCELED)
+            {
+                // Restore previous path
+                mCurrentPhotoPath = mPreviousPhotoPath;
+                mPreviousPhotoPath = "";
+            }
+            else if (resultCode == RESULT_OK && mPreviousPhotoPath.compareTo("")!= 0 )
+            {
+                // Delete previous picture
+                File lFile = new File(mPreviousPhotoPath);
+                lFile.delete();
+                mPreviousPhotoPath = "";
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException
+    {
+        String lTimeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String lImageFileName = "JPEG_" + lTimeStamp;
+        File lStorageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File lImage = File.createTempFile(lImageFileName, ".jpg", lStorageDir);
+
+        // Back up and update current path
+        mPreviousPhotoPath = mCurrentPhotoPath;
+        mCurrentPhotoPath = lImage.getAbsolutePath();
+
+        return lImage;
+    }
+
+
+
+
 }
