@@ -30,10 +30,16 @@
         tools:context="com.dev.portay.macave.CellarListActivity"
         tools:listitem="@layout/cellar_list_content" />
 
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/wine_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3" />-->
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/wine_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>
