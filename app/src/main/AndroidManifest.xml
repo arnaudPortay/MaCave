@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dev.portay.macave">
 
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.dev.portay.macave.CellarListActivity"
+            android:name=".CellarListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.dev.portay.macave.WineDetailActivity"
+            android:name=".WineDetailActivity"
             android:label="@string/title_wine_detail"
             android:parentActivityName=".CellarListActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -28,7 +37,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dev.portay.macave.CellarListActivity" />
         </activity>
-        <activity android:name=".AddWineActivity"></activity>
+        <activity android:name=".AddWineActivity" />
+        <activity android:name=".LabelDisplayActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -37,13 +48,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
-    <uses-feature android:name="android.hardware.camera2"
-        android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
 
 </manifest>

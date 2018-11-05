@@ -2,7 +2,11 @@ package com.dev.portay.macave;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,12 +21,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -96,11 +102,11 @@ public class WineDetailFragment extends Fragment {
                                     {
                                         TextView lView = getView().findViewById(R.id.number_detail);
                                         String lVal = lView.getText().toString();
-                                        lView.setText(String.format("%d", Integer.parseInt(lVal) + 1));
+
+                                        // update bottle number
+                                        DataRepository.getDataRepository().updateBottleNumber(Integer.parseInt(lVal) + 1, wines.get(0).getId());
                                         if (lVal.compareTo("0") == 0)
                                         {
-                                            DataRepository.getDataRepository().
-                                                    updateBottleNumber(1, wines.get(0).getId());
                                             DataRepository.getDataRepository().
                                                     updateRebuy(false, wines.get(0).getId());
                                         }
@@ -117,7 +123,8 @@ public class WineDetailFragment extends Fragment {
                                         int lVal = Integer.parseInt(lView.getText().toString());
                                         if (lVal != 0)
                                         {
-                                            lView.setText(String.format("%d", lVal - 1));
+                                            // update bottle number
+                                            DataRepository.getDataRepository().updateBottleNumber(lVal - 1, wines.get(0).getId());
                                         }
 
                                         if (lVal == 1)
@@ -150,8 +157,57 @@ public class WineDetailFragment extends Fragment {
                                 });
 
                                 // Set Title
-                                ((CollapsingToolbarLayout)getActivity().findViewById(R.id.toolbar_layout))
-                                        .setTitle(wines.get(0).getName());
+                                // if on phone
+                                if (getActivity().findViewById(R.id.toolbar_layout) != null)
+                                {
+                                    // Set title in Toolbar
+                                    ((CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout))
+                                            .setTitle(wines.get(0).getName());
+                                    // Hide Text view
+                                    getActivity().findViewById(R.id.name_detail).setVisibility(View.INVISIBLE);
+                                }
+                                else if (getActivity().findViewById(R.id.name_detail) != null)// on tablet
+                                {
+                                    // Set title in text view
+                                    ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
+                                    // Show text view
+                                    getActivity().findViewById(R.id.name_detail).setVisibility(View.VISIBLE);
+                                }
+
+                                if (wines.get(0).getLabelPath().compareTo("") != 0)
+                                {
+                                    File lFile = new File(wines.get(0).getLabelPath());
+                                    if (lFile.exists())
+                                    {
+                                        Bitmap lLabelBitmap = BitmapFactory.decodeFile(wines.get(0).getLabelPath());
+
+                                        if (lLabelBitmap != null && getActivity().findViewById(R.id.LabelImageView) != null)
+                                        {
+                                            ((ImageView)getActivity().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
+
+                                            getActivity().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View view)
+                                                {
+                                                    // Start activity to see image
+                                                    Context context = view.getContext();
+                                                    Intent intent = new Intent(context, LabelDisplayActivity.class);
+                                                    intent.putExtra(LabelDisplayActivity.ARG_LABEL, wines.get(0).getLabelPath());
+
+                                                    context.startActivity(intent);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    /*if (getActivity().findViewById(R.id.LabelImageView) != null)
+                                    {
+                                        getActivity().findViewById(R.id.LabelImageView).setVisibility(View.GONE);
+                                    }*/
+                                }
 
                                 // Set Region
                                 ((TextView) getView().findViewById(R.id.region_detail)).
@@ -317,5 +373,4 @@ public class WineDetailFragment extends Fragment {
 
         return false;
     }
-
 }

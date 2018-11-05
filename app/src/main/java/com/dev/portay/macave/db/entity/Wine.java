@@ -46,12 +46,8 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     @ColumnInfo(name = "consumption_date")
     private int mConsumptionDate;
 
-
-
-    // TODO: Add the labelUri getters & setters and uncomment import statement
-    //@ColumnInfo(name = "labelPath")
-    //private URI mLabelPath;
-    //TODO: Checkout the @Ignore statement to use with an image ( https://developer.android.com/training/data-storage/room/defining-data )
+    @ColumnInfo(name = "label_path")
+    private String mLabelPath;
 
 
     // Enum for wine color
@@ -93,6 +89,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         mOrigin = pIn.readString();
         mRebuy = pIn.readInt() != 0;
         mConsumptionDate = pIn.readInt();
+        mLabelPath = pIn.readString();
     }
 
     @Override
@@ -107,6 +104,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         parcel.writeString(mOrigin);
         parcel.writeInt(mRebuy ? 1 : 0);
         parcel.writeInt(mConsumptionDate);
+        parcel.writeString(mLabelPath);
     }
 
     public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>()
@@ -129,7 +127,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     }
 
     /* * Constructor * */
-    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer, int mYear, int mBottleNumber, int mConsumptionDate)
+    public Wine(String mName, String mOrigin, WineColor mColor, String mProducer, int mYear, int mBottleNumber, int mConsumptionDate, String mLabelPath)
     {
         this.mName = mName;
         this.mOrigin = mOrigin;
@@ -139,6 +137,7 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
         this.mBottleNumber = mBottleNumber;
         this.mRebuy = false; // By default you're adding the wine so you have some and don't need to rebuy right away
         this.mConsumptionDate = mConsumptionDate;
+        this.mLabelPath = mLabelPath;
     }
 
     /* * Getters & Setters * */
@@ -230,6 +229,16 @@ public class Wine implements Parcelable // Parcelable allows you to pass the obj
     public void setConsumptionDate(int pConsumptionDate)
     {
         this.mConsumptionDate = pConsumptionDate;
+    }
+
+    public String getLabelPath()
+    {
+        return mLabelPath;
+    }
+
+    public void setLabelPath(String pLabelPath)
+    {
+        this.mLabelPath = pLabelPath;
     }
 
     public static int getStringIdFromColor(WineColor pColor)
