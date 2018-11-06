@@ -1,10 +1,13 @@
 package com.dev.portay.macave;
 
 import android.arch.lifecycle.Observer;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +27,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.dev.portay.macave.db.entity.Wine;
@@ -80,7 +85,9 @@ public class AddWineActivity extends AppCompatActivity
         // Hide the Take Picture button if device has no camera
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
         {
-            findViewById(R.id.cameraButton).setVisibility(View.GONE);
+            findViewById(R.id.LabelPreview).setVisibility(View.INVISIBLE);
+            findViewById(R.id.deleteLabelButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.cameraButton).setVisibility(View.INVISIBLE);
         }
         else
         {
@@ -153,6 +160,10 @@ public class AddWineActivity extends AppCompatActivity
         if (mCurrentPhotoPath == null)
         {
             mCurrentPhotoPath = "";
+        }
+        else
+        {
+            updateLabelPreview();
         }
 
         DataRepository lRepo = DataRepository.getDataRepository();
@@ -524,6 +535,27 @@ public class AddWineActivity extends AppCompatActivity
 
 
 
+        // Delete Label Image Button
+        final ImageButton lDelImageButton = findViewById(R.id.deleteLabelButton);
+        if (mCurrentPhotoPath.compareTo("") == 0)
+        {
+            lDelImageButton.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            lDelImageButton.setVisibility(View.VISIBLE);
+        }
+
+        lDelImageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                deletePictures();
+                ((ImageView)findViewById(R.id.LabelPreview)).setImageResource(android.R.drawable.ic_menu_gallery);
+                lDelImageButton.setVisibility(View.INVISIBLE);
+            }
+        });
 
         // Validation Button
         final Button lButton = findViewById(R.id.buttonSave);
@@ -594,6 +626,13 @@ public class AddWineActivity extends AppCompatActivity
         mDishNameList.clear();
         mCepageNameList.clear();
 
+        deletePictures();
+
+        super.onBackPressed();
+    }
+
+    private void deletePictures()
+    {
         if (mPreviousPhotoPath.compareTo("")!= 0 )
         {
             // Delete previous picture
@@ -610,8 +649,6 @@ public class AddWineActivity extends AppCompatActivity
 
         mCurrentPhotoPath = "";
         mPreviousPhotoPath = "";
-
-        super.onBackPressed();
     }
 
     @Override
@@ -625,12 +662,18 @@ public class AddWineActivity extends AppCompatActivity
                 mCurrentPhotoPath = mPreviousPhotoPath;
                 mPreviousPhotoPath = "";
             }
-            else if (resultCode == RESULT_OK && mPreviousPhotoPath.compareTo("")!= 0 )
+            else if (resultCode == RESULT_OK )
             {
-                // Delete previous picture
-                File lFile = new File(mPreviousPhotoPath);
-                lFile.delete();
-                mPreviousPhotoPath = "";
+                if (mPreviousPhotoPath.compareTo("")!= 0)
+                {
+                    // Delete previous picture
+                    File lFile = new File(mPreviousPhotoPath);
+                    lFile.delete();
+                    mPreviousPhotoPath = "";
+                }
+
+                updateLabelPreview();
+                findViewById(R.id.deleteLabelButton).setVisibility(View.VISIBLE);
             }
         }
     }
@@ -647,6 +690,35 @@ public class AddWineActivity extends AppCompatActivity
         mCurrentPhotoPath = lImage.getAbsolutePath();
 
         return lImage;
+    }
+
+    private void updateLabelPreview()
+    {
+        //Update label picture
+        File lFile = new File(mCurrentPhotoPath);
+        if (lFile.exists())
+        {
+            Bitmap lLabelBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+
+            if (lLabelBitmap != null && findViewById(R.id.LabelPreview) != null)
+            {
+                ((ImageView)findViewById(R.id.LabelPreview)).setImageBitmap(lLabelBitmap);
+
+                findViewById(R.id.LabelPreview).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        // Start activity to see image
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, LabelDisplayActivity.class);
+                        intent.putExtra(LabelDisplayActivity.ARG_LABEL, mCurrentPhotoPath);
+
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 
 
