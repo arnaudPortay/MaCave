@@ -201,13 +201,6 @@ public class WineDetailFragment extends Fragment {
                                         }
                                     }
                                 }
-                                else
-                                {
-                                    /*if (getActivity().findViewById(R.id.LabelImageView) != null)
-                                    {
-                                        getActivity().findViewById(R.id.LabelImageView).setVisibility(View.GONE);
-                                    }*/
-                                }
 
                                 // Set Region
                                 ((TextView) getView().findViewById(R.id.region_detail)).
