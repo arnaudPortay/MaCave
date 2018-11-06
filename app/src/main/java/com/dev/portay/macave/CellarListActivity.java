@@ -132,6 +132,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             {
                 mWines = pWines;
                 lListAdapter.setWines(pWines);
+                new clearTabletViewAsync(mWines, lListAdapter).execute();
                 if (mSearchView != null)
                 {
                     onQueryTextChange(mSearchView.getQuery().toString());
@@ -436,6 +437,40 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             RecyclerView lView = findViewById(R.id.wine_list);
             ((CellarAdapter)lView.getAdapter()).setWines(wines);
             lView.scrollToPosition(0);
+        }
+    }
+
+    private class clearTabletViewAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private List<Wine> mWines;
+        private CellarAdapter mCellarAdapter;
+
+        clearTabletViewAsync(List<Wine> pWines, CellarAdapter pCellarAdapter)
+        {
+            this.mCellarAdapter = pCellarAdapter;
+            this.mWines = pWines;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids)
+        {
+            for (Wine lWine: mWines)
+            {
+                if (lWine.getId() == mCellarAdapter.getCurrentId())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean)
+        {
+            if (aBoolean)
+            {
+                mCellarAdapter.clearTabletView();
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,5 +143,20 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
                     .replace(R.id.wine_detail_container, fragment)
                     .commit();
         }
+    }
+
+    public void clearTabletView()
+    {
+        if (mTwoPane)
+        {
+            mParentActivity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.wine_detail_container, new Fragment())
+                    .commit();
+        }
+    }
+
+    public int getCurrentId()
+    {
+        return mCurrentId;
     }
 }
