@@ -37,6 +37,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
     private List<Wine> mWines; //Cached Copy
     private final CellarListActivity mParentActivity;
     private final boolean mTwoPane;
+    private static int mCurrentId = -1;
 
     /* ************* FUNCTIONS ************* */
     public CellarAdapter(CellarListActivity pParentActivity, boolean pTwoPane)
@@ -44,6 +45,7 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
         this.mParentActivity = pParentActivity;
         this.mTwoPane = pTwoPane;
     }
+
 
     @NonNull
     @Override
@@ -111,21 +113,34 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
         @Override
         public void onClick(View view) {
 
-            if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putInt(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
-                WineDetailFragment fragment = new WineDetailFragment();
-                fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.wine_detail_container, fragment)
-                        .commit();
-            } else {
+            mCurrentId = (int)view.getTag();
+
+            if (mTwoPane)
+            {
+                updateTabletView();
+            }
+            else
+            {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, WineDetailActivity.class);
-                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, (int)view.getTag());
+                intent.putExtra(WineDetailFragment.ARG_ITEM_ID, mCurrentId);
 
                 context.startActivity(intent);
             }
         }
     };
+
+    public void updateTabletView()
+    {
+        if (mCurrentId != -1)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt(WineDetailFragment.ARG_ITEM_ID, mCurrentId);
+            WineDetailFragment fragment = new WineDetailFragment();
+            fragment.setArguments(arguments);
+            mParentActivity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.wine_detail_container, fragment)
+                    .commit();
+        }
+    }
 }

@@ -107,12 +107,15 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
-
         }
 
         final RecyclerView recyclerView = findViewById(R.id.wine_list);
         assert recyclerView != null;
         final CellarAdapter lListAdapter = new CellarAdapter(this, mTwoPane);
+        if (mTwoPane)
+        {
+            lListAdapter.updateTabletView();
+        }
         recyclerView.setAdapter(lListAdapter);
 
         // Get a new or existing ViewModel from the ViewModelProvider.
