@@ -64,6 +64,7 @@ public class WineDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
+            // @TODO Optimize this by not adding the observer every time....
             DataRepository.getDataRepository().getAllDishesName().observe(this, new Observer<List<String>>()
             {
                 @Override
@@ -76,6 +77,8 @@ public class WineDetailFragment extends Fragment {
                     mDishesNames.addAll(lSet);
                 }
             });
+
+
             ViewModelProviders.of(this).get(WineViewModel.class)
                     .getWineById(getArguments().getInt(ARG_ITEM_ID))
                     .observe(this, new Observer<List<Wine>>()
@@ -341,6 +344,16 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
                             }
+
+                            getView().findViewById(R.id.del_wine_button).setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    // @TODO Add dialog
+                                    DataRepository.getDataRepository().deleteWine(wines.get(0));
+                                }
+                            });
                         }
                     });
 

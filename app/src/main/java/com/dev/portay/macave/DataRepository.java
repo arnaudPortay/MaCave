@@ -313,6 +313,28 @@ public class DataRepository
 
     }
 
+    private static class deleteWineAsync extends AsyncTask<Wine, Void, Void>
+    {
+        private WineDao mWineDao;
+
+        deleteWineAsync(WineDao pWineDao)
+        {
+            this.mWineDao = pWineDao;
+        }
+
+        @Override
+        protected Void doInBackground(Wine... wines)
+        {
+            mWineDao.deleteWine(wines[0]);
+            return null;
+        }
+    }
+
+    public void deleteWine(Wine pWine)
+    {
+        new deleteWineAsync(mWineDao).execute(pWine);
+    }
+
 
     // Synchronous method, only call from non UI thread
     List<Dish> getDishesByWineIdSync(int pWineId)
