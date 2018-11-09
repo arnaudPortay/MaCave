@@ -14,7 +14,7 @@
     <string name="wine_champagne">Champagne</string>
     <string name="wine_champagne_rose">Champagne Rosé</string>
     <string name="error">Oups ! Erreur...</string>
-    <string name="add_wine_error_message">Il faut renseigner au minimum le nom, le producteur et l'origine du vin</string>
+    <string name="add_wine_error_message">Il faut renseigner au minimum le nom, le producteur et l\'origine du vin</string>
     <string name="add_wine_error_title">Oups !</string>
     <string name="ok">Ok</string>
     <string name="name">Nom</string>
@@ -46,4 +46,6 @@
     <string name="consumption_date">A consommer en :</string>
     <string name="m_consumption_date">Date de consommation</string>
     <string name="add">Ajouter</string>
+    <string name="deletion">Suppression</string>
+    <string name="wine_deletion_message">Vous êtes sur le point de supprimer un vin, êtes-vous sûr de vouloir continuer ?</string>
 </resources>

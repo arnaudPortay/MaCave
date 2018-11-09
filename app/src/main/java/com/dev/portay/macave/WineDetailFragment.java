@@ -64,7 +64,6 @@ public class WineDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
-            // @TODO Optimize this by not adding the observer every time....
             DataRepository.getDataRepository().getAllDishesName().observe(this, new Observer<List<String>>()
             {
                 @Override
@@ -209,13 +208,6 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.region_detail)).
                                         setText(wines.get(0).getOrigin());
 
-                                //TODO: Handle cases where there is no region or name for good responsive behavior
-                                // Does not work....
-                                /*ConstraintLayout.LayoutParams lParams =
-                                        (ConstraintLayout.LayoutParams)getView().findViewById(R.id.year_detail).getLayoutParams();
-                                lParams.setMargins(0,0,0,0);
-                                getView().findViewById(R.id.year_detail).setLayoutParams(lParams);*/
-
                                 // Set Producer
                                 ((TextView) getView().findViewById(R.id.producer_detail)).
                                         setText(wines.get(0).getProducer());
@@ -351,7 +343,32 @@ public class WineDetailFragment extends Fragment {
                                 public void onClick(View view)
                                 {
                                     // @TODO Add dialog
-                                    DataRepository.getDataRepository().deleteWine(wines.get(0));
+                                    AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
+                                    lBuilder.setTitle(R.string.deletion);
+                                    lBuilder.setMessage(R.string.wine_deletion_message);
+                                    lBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i)
+                                        {
+                                            DataRepository.getDataRepository().deleteWine(wines.get(0));
+                                            if (getActivity().getClass() == WineDetailActivity.class)
+                                            {
+                                                getActivity().onBackPressed();
+                                            }
+                                        }
+                                    });
+
+                                    lBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i)
+                                        {
+                                            // Nothing to do
+                                        }
+                                    });
+                                    AlertDialog lDialog = lBuilder.create();
+                                    lDialog.show();
                                 }
                             });
                         }
