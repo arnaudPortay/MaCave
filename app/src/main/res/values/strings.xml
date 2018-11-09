@@ -13,7 +13,7 @@
     <string name="wine_white">Blanc</string>
     <string name="wine_champagne_rose">Champagne Rosé</string>
     <string name="error">Oups ! Erreur...</string>
-    <string name="add_wine_error_message">Il faut renseigner au minimum le nom ou le producteur du vin</string>
+    <string name="add_wine_error_message">Il faut renseigner au minimum le nom, le producteur et l'origine du vin</string>
     <string name="add_wine_error_title">Oups !</string>
     <string name="ok">Ok</string>
     <string name="name">Nom</string>

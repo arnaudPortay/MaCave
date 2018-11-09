@@ -565,7 +565,7 @@ public class AddWineActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 Intent lReplyIntent = new Intent();
-                if (TextUtils.isEmpty(mEditWineNameView.getText()) && TextUtils.isEmpty(mEditProducerView.getText()))
+                if (TextUtils.isEmpty(mEditWineNameView.getText()) || TextUtils.isEmpty(mEditProducerView.getText()) || TextUtils.isEmpty(mEditRegionView.getText()))
                 {
                     AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext());
                     lBuilder.setTitle(R.string.add_wine_error_title);
