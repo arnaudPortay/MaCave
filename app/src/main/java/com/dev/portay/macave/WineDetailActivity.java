@@ -2,7 +2,6 @@ package com.dev.portay.macave;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,8 +27,7 @@ public class WineDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Make this an edit button ?", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(true);
             }
         });
 

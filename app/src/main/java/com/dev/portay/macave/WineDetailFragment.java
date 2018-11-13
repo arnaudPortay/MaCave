@@ -15,12 +15,15 @@ import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.method.KeyListener;
+import android.text.method.TextKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,6 +91,8 @@ public class WineDetailFragment extends Fragment {
 
                             if (wines != null && wines.size() > 0)
                             {
+                                enableEdition(false);
+
                                 // Set Year
                                 ((TextView) getView().findViewById(R.id.year_detail)).
                                         setText(String.format("%d",wines.get(0).getYear()));
@@ -342,7 +347,6 @@ public class WineDetailFragment extends Fragment {
                                 @Override
                                 public void onClick(View view)
                                 {
-                                    // @TODO Add dialog
                                     AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                                     lBuilder.setTitle(R.string.deletion);
                                     lBuilder.setMessage(R.string.wine_deletion_message);
@@ -395,5 +399,26 @@ public class WineDetailFragment extends Fragment {
         }
 
         return false;
+    }
+
+    public void enableEdition(boolean pEdit)
+    {
+        KeyListener lListener = pEdit ? TextKeyListener.getInstance() : null;
+        ((EditText)getView().findViewById(R.id.name_detail)).setKeyListener(lListener);
+        getView().findViewById(R.id.name_detail).setFocusable(pEdit);
+        getView().findViewById(R.id.name_detail).setFocusableInTouchMode(pEdit);
+        getView().findViewById(R.id.name_detail).setClickable(pEdit);
+
+        ((EditText)getView().findViewById(R.id.region_detail)).setKeyListener(lListener);
+        getView().findViewById(R.id.region_detail).setFocusable(pEdit);
+        getView().findViewById(R.id.region_detail).setFocusableInTouchMode(pEdit);
+        getView().findViewById(R.id.region_detail).setClickable(pEdit);
+
+        ((EditText)getView().findViewById(R.id.producer_detail)).setKeyListener(lListener);
+        getView().findViewById(R.id.producer_detail).setFocusable(pEdit);
+        getView().findViewById(R.id.producer_detail).setFocusableInTouchMode(pEdit);
+        getView().findViewById(R.id.producer_detail).setClickable(pEdit);
+
+        getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
     }
 }
