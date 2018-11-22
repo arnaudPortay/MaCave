@@ -21,18 +21,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
+import com.dev.portay.macave.util.MySpinnerAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -92,6 +96,33 @@ public class WineDetailFragment extends Fragment {
                             if (wines != null && wines.size() > 0)
                             {
                                 enableEdition(false);
+
+                                // Populate year spinner
+                                int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
+                                int lMinYear = wines.get(0).getYear() < lCurrentYear - 50 ? wines.get(0).getYear() : lCurrentYear - 50;
+                                MySpinnerAdapter<Integer> lYearAdapter = new MySpinnerAdapter<>(getContext(), android.R.layout.simple_spinner_item);
+
+                                for (int i = lCurrentYear; i >= lMinYear; i--)
+                                {
+                                    lYearAdapter.add(i);
+                                }
+                                ((Spinner)getView().findViewById(R.id.spinner_year)).setAdapter(lYearAdapter);
+                                ((Spinner)getView().findViewById(R.id.spinner_year)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                                {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+                                    {
+                                        //mYear = (int)adapterView.getItemAtPosition(i);
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView)
+                                    {
+                                        //Nothing to do
+                                    }
+                                });
+
+                                ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(lYearAdapter.getPosition(wines.get(0).getYear()));
 
                                 // Set Year
                                 ((TextView) getView().findViewById(R.id.year_detail)).
@@ -170,6 +201,10 @@ public class WineDetailFragment extends Fragment {
                                     // Set title in Toolbar
                                     ((CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout))
                                             .setTitle(wines.get(0).getName());
+
+                                    // Set title in text view
+                                    ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
+
                                     // Hide Text view
                                     getActivity().findViewById(R.id.name_detail).setVisibility(View.INVISIBLE);
                                 }
@@ -419,6 +454,11 @@ public class WineDetailFragment extends Fragment {
         getView().findViewById(R.id.producer_detail).setFocusableInTouchMode(pEdit);
         getView().findViewById(R.id.producer_detail).setClickable(pEdit);
 
+        getView().findViewById(R.id.spinner_year).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+        getView().findViewById(R.id.year_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+
         getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
+
+        getView().findViewById(R.id.name_detail).setVisibility(pEdit ? View.VISIBLE : getView().findViewById(R.id.toolbar_layout) == null ? View.VISIBLE : View.INVISIBLE);
     }
 }
