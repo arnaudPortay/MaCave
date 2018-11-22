@@ -256,6 +256,33 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.color_detail))
                                         .setText(Wine.getStringIdFromColor(wines.get(0).getColor()));
 
+
+                                // Populate consumption date spinner
+                                MySpinnerAdapter<Integer> lConsumptionDateAdapter = new MySpinnerAdapter<>(getContext(), android.R.layout.simple_spinner_item);
+
+                                int lMinConsumptionYear = wines.get(0).getConsumptionDate() < lCurrentYear ? wines.get(0).getConsumptionDate() : lCurrentYear;
+                                for (int i = lMinConsumptionYear; i < lCurrentYear + 30; i++)
+                                {
+                                    lConsumptionDateAdapter.add(i);
+                                }
+                                ((Spinner)getView().findViewById(R.id.spinner_consumption)).setAdapter(lConsumptionDateAdapter);
+                                ((Spinner)getView().findViewById(R.id.spinner_consumption)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                                {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+                                    {
+                                        //mConsumptionDate = (int)adapterView.getItemAtPosition(i);
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView)
+                                    {
+                                        // Nothing to do
+                                    }
+                                });
+
+                                ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(lConsumptionDateAdapter.getPosition(wines.get(0).getConsumptionDate()));
+
                                 // Set Consumption Date
                                 ((TextView) getView().findViewById(R.id.consumption_date_detail))
                                         .setText(String.format("%d", wines.get(0).getConsumptionDate()));
@@ -456,6 +483,9 @@ public class WineDetailFragment extends Fragment {
 
         getView().findViewById(R.id.spinner_year).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
         getView().findViewById(R.id.year_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+
+        getView().findViewById(R.id.spinner_consumption).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+        getView().findViewById(R.id.consumption_date_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
 
         getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
 
