@@ -258,7 +258,33 @@
         android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cepage_label"></android.support.design.chip.ChipGroup>
+        app:layout_constraintTop_toBottomOf="@+id/cepage_label">
+
+        <android.support.design.chip.Chip
+            android:id="@+id/chip_addCepage"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="false"
+            android:drawablePadding="0dp"
+            android:text=""
+            android:textColor="@android:color/background_light"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@color/colorPrimary"
+            app:chipEndPadding="0dp"
+            app:chipIcon="@drawable/black_add"
+            app:chipIconTint="@android:color/background_light"
+            app:chipStartPadding="0dp"
+            app:closeIconEnabled="false"
+            app:closeIconEndPadding="0dp"
+            app:closeIconStartPadding="0dp"
+            app:iconEndPadding="4dp"
+            app:iconStartPadding="4dp"
+            app:textEndPadding="0dp"
+            app:textStartPadding="0dp"
+            android:visibility="invisible"/>
+
+    </android.support.design.chip.ChipGroup>
 
     <TextView
         android:id="@+id/consumption_date_label"

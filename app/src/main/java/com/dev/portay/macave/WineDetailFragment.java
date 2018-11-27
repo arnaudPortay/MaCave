@@ -355,6 +355,11 @@ public class WineDetailFragment extends Fragment {
                                     @Override
                                     public void onClick(final View view)
                                     {
+                                        getView().findViewById(R.id.name_detail).clearFocus();
+                                        getView().findViewById(R.id.region_detail).clearFocus();
+                                        getView().findViewById(R.id.producer_detail).clearFocus();
+                                        view.requestFocusFromTouch();
+
                                         AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                                         lBuilder.setTitle(R.string.add_suggested_dish_title);
 
@@ -403,7 +408,7 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
 
-                                // Set suggested dishes
+                                // Set cepages
                                 DataRepository.getDataRepository().getCepageByWineId(wines.get(0).getId()).observe(WineDetailFragment.this, new Observer<List<Cepage>>()
                                 {
                                     @Override
@@ -419,15 +424,89 @@ public class WineDetailFragment extends Fragment {
                                                 lChip.setText(lCepage.mCepageName);
                                                 lChip.setChipBackgroundColorResource(R.color.colorPrimary);
                                                 lChip.setTextColor(getResources().getColor(android.R.color.background_light));
+                                                lChip.setCloseIconTintResource(android.R.color.background_light);
+                                                lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                                                lChip.setOnCloseIconClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View view)
+                                                    {
+                                                        // delete chip
+                                                        ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).removeView(view);
+
+                                                        // Delete Cepage from DB
+                                                        DataRepository.getDataRepository().deleteCepage(lCepage);
+                                                    }
+                                                });
 
                                                 // Add chip to chipgroup
-                                                ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).addView(lChip, ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).getChildCount());
+                                                ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).addView(lChip, ((ChipGroup) getView().findViewById(R.id.cepage_chipgroup)).getChildCount() - 1);
                                             }
                                         }
                                     }
                                 });
                             }
 
+                            getView().findViewById(R.id.chip_addCepage).setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(final View view)
+                                {
+                                    getView().findViewById(R.id.name_detail).clearFocus();
+                                    getView().findViewById(R.id.region_detail).clearFocus();
+                                    getView().findViewById(R.id.producer_detail).clearFocus();
+                                    view.requestFocusFromTouch();
+
+                                    AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
+                                    lBuilder.setTitle(R.string.add_cepage);
+
+                                    ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                                    final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
+                                    lEdit.setAdapter(lAdapter);
+                                    lBuilder.setView(lEdit);
+
+
+                                    lBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i)
+                                        {
+                                            if (lEdit.getText().toString().compareTo("") != 0) // Do nothing if empty
+                                            {
+                                                if (!chipGroupHasChip((ChipGroup)getView().findViewById(R.id.cepage_chipgroup), lEdit.getText().toString()))// do nothing if cepage already exists
+                                                {
+                                                    DataRepository.getDataRepository().insertCepage(new Cepage(wines.get(0).getId(), lEdit.getText().toString()));
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    lBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i)
+                                        {
+                                            // Nothing to do
+                                        }
+                                    });
+                                    final AlertDialog lDialog = lBuilder.create();
+                                    lEdit.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+                                        @Override
+                                        public void onFocusChange(View view, boolean hasFocus)
+                                        {
+                                            if (hasFocus)
+                                            {
+                                                lDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                            }
+                                        }
+                                    });
+                                    lDialog.show();
+                                }
+                            });
+
+
+
+                            // Delete Wine button
                             getView().findViewById(R.id.del_wine_button).setOnClickListener(new View.OnClickListener()
                             {
                                 @Override
@@ -516,6 +595,20 @@ public class WineDetailFragment extends Fragment {
 
         getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
 
+        getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+
+        setCepagesCloseIconVisibility(pEdit);
+
         getView().findViewById(R.id.name_detail).setVisibility(pEdit ? View.VISIBLE : getView().findViewById(R.id.toolbar_layout) == null ? View.VISIBLE : View.INVISIBLE);
     }
+
+    private void setCepagesCloseIconVisibility(boolean pVisibility)
+    {
+        for (int i = 0; i < ((ChipGroup)getView().findViewById(R.id.cepage_chipgroup)).getChildCount() - 1; i++)
+        {
+            ((Chip)((ChipGroup)getView().findViewById(R.id.cepage_chipgroup)).getChildAt(i)).setCloseIconEnabled(pVisibility);
+        }
+    }
+
+
 }
