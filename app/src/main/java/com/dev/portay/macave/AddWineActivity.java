@@ -361,7 +361,7 @@ public class AddWineActivity extends AppCompatActivity
                 AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                 lBuilder.setTitle(R.string.add_cepage);
 
-                ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mCepageNameList);
                 final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
                 lEdit.setAdapter(lAdapter);
                 lBuilder.setView(lEdit);
