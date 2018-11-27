@@ -231,7 +231,10 @@ public class WineDetailFragment extends Fragment {
                                             .setTitle(wines.get(0).getName());
 
                                     // Set title in text view
-                                    ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
+                                    if (!msIsEditing)
+                                    {
+                                        ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
+                                    }
 
                                     // Hide Text view
                                     getActivity().findViewById(R.id.name_detail).setVisibility(msIsEditing ? View.VISIBLE : View.INVISIBLE);
@@ -241,7 +244,10 @@ public class WineDetailFragment extends Fragment {
                                     // Set title in text view
                                     ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
                                     // Show text view
-                                    getActivity().findViewById(R.id.name_detail).setVisibility(View.VISIBLE);
+                                    if (!msIsEditing)
+                                    {
+                                        getActivity().findViewById(R.id.name_detail).setVisibility(View.VISIBLE);
+                                    }
                                 }
 
                                 if (wines.get(0).getLabelPath().compareTo("") != 0)
@@ -273,12 +279,18 @@ public class WineDetailFragment extends Fragment {
                                 }
 
                                 // Set Region
-                                ((TextView) getView().findViewById(R.id.region_detail)).
-                                        setText(wines.get(0).getOrigin());
+                                if (!msIsEditing)
+                                {
+                                    ((TextView) getView().findViewById(R.id.region_detail)).
+                                            setText(wines.get(0).getOrigin());
+                                }
 
                                 // Set Producer
-                                ((TextView) getView().findViewById(R.id.producer_detail)).
-                                        setText(wines.get(0).getProducer());
+                                if (!msIsEditing)
+                                {
+                                    ((TextView) getView().findViewById(R.id.producer_detail)).
+                                            setText(wines.get(0).getProducer());
+                                }
 
                                 // Set Color
                                 ((TextView) getView().findViewById(R.id.color_detail))
