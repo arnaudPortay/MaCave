@@ -54,6 +54,12 @@ public class WineDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     private List<String> mDishesNames;
+    private List<String> mCepagesNames;
+    private static boolean msIsEditing = false;
+
+    private static int msYearPos = -1;
+    private static int msConsumptionPos = -1;
+    private static int msColorPos = -1;
 
 
     /**
@@ -67,7 +73,9 @@ public class WineDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         mDishesNames = new ArrayList<>();
+        mCepagesNames = new ArrayList<>();
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
@@ -84,6 +92,19 @@ public class WineDetailFragment extends Fragment {
                 }
             });
 
+            DataRepository.getDataRepository().getAllCepageNames().observe(this, new Observer<List<String>>()
+            {
+                @Override
+                public void onChanged(@Nullable List<String> strings)
+                {
+                    // Getting rid of duplicates
+                    Set<String> lSet = new HashSet<>();
+                    lSet.addAll(strings);
+                    mCepagesNames.clear();
+                    mCepagesNames.addAll(lSet);
+                }
+            });
+
 
             ViewModelProviders.of(this).get(WineViewModel.class)
                     .getWineById(getArguments().getInt(ARG_ITEM_ID))
@@ -95,7 +116,7 @@ public class WineDetailFragment extends Fragment {
 
                             if (wines != null && wines.size() > 0)
                             {
-                                enableEdition(false);
+                                enableEdition(msIsEditing);
 
                                 // Populate year spinner
                                 int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -112,7 +133,7 @@ public class WineDetailFragment extends Fragment {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
                                     {
-                                        //mYear = (int)adapterView.getItemAtPosition(i);
+                                        msYearPos = i;
                                     }
 
                                     @Override
@@ -122,7 +143,14 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
 
-                                ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(lYearAdapter.getPosition(wines.get(0).getYear()));
+                                if (!msIsEditing || msYearPos == -1 )
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(lYearAdapter.getPosition(wines.get(0).getYear()));
+                                }
+                                else
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(msYearPos);
+                                }
 
                                 // Set Year
                                 ((TextView) getView().findViewById(R.id.year_detail)).
@@ -206,7 +234,7 @@ public class WineDetailFragment extends Fragment {
                                     ((TextView)getActivity().findViewById(R.id.name_detail)).setText(wines.get(0).getName());
 
                                     // Hide Text view
-                                    getActivity().findViewById(R.id.name_detail).setVisibility(View.INVISIBLE);
+                                    getActivity().findViewById(R.id.name_detail).setVisibility(msIsEditing ? View.VISIBLE : View.INVISIBLE);
                                 }
                                 else if (getActivity().findViewById(R.id.name_detail) != null)// on tablet
                                 {
@@ -268,7 +296,7 @@ public class WineDetailFragment extends Fragment {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
                                     {
-                                        //mColor = WineColorConverter.toWineColor(i);
+                                        msColorPos = i;
                                     }
 
                                     @Override
@@ -278,7 +306,14 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
 
-                                ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(lColorAdapter.getPosition(getResources().getString(Wine.getStringIdFromColor(wines.get(0).getColor()))));
+                                if (!msIsEditing || msColorPos == -1)
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(lColorAdapter.getPosition(getResources().getString(Wine.getStringIdFromColor(wines.get(0).getColor()))));
+                                }
+                                else
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(msColorPos);
+                                }
 
 
                                 // Populate consumption date spinner
@@ -295,7 +330,7 @@ public class WineDetailFragment extends Fragment {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
                                     {
-                                        //mConsumptionDate = (int)adapterView.getItemAtPosition(i);
+                                        msConsumptionPos = i;
                                     }
 
                                     @Override
@@ -305,7 +340,14 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 });
 
-                                ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(lConsumptionDateAdapter.getPosition(wines.get(0).getConsumptionDate()));
+                                if (!msIsEditing || msConsumptionPos == -1)
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(lConsumptionDateAdapter.getPosition(wines.get(0).getConsumptionDate()));
+                                }
+                                else
+                                {
+                                    ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(msConsumptionPos);
+                                }
 
                                 // Set Consumption Date
                                 ((TextView) getView().findViewById(R.id.consumption_date_detail))
@@ -460,7 +502,7 @@ public class WineDetailFragment extends Fragment {
                                     AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext()).setCancelable(false);
                                     lBuilder.setTitle(R.string.add_cepage);
 
-                                    ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mDishesNames);
+                                    ArrayAdapter<String> lAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, mCepagesNames);
                                     final AutoCompleteTextView lEdit = new AutoCompleteTextView(view.getContext());
                                     lEdit.setAdapter(lAdapter);
                                     lBuilder.setView(lEdit);
@@ -568,6 +610,8 @@ public class WineDetailFragment extends Fragment {
 
     public void enableEdition(boolean pEdit)
     {
+        msIsEditing = pEdit;
+
         KeyListener lListener = pEdit ? TextKeyListener.getInstance() : null;
         ((EditText)getView().findViewById(R.id.name_detail)).setKeyListener(lListener);
         getView().findViewById(R.id.name_detail).setFocusable(pEdit);
