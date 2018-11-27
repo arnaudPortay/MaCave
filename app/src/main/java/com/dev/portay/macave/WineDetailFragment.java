@@ -256,6 +256,30 @@ public class WineDetailFragment extends Fragment {
                                 ((TextView) getView().findViewById(R.id.color_detail))
                                         .setText(Wine.getStringIdFromColor(wines.get(0).getColor()));
 
+                                // Populate color spinner
+                                MySpinnerAdapter<String> lColorAdapter = new MySpinnerAdapter<>(getContext(), android.R.layout.simple_spinner_item);
+                                for (Wine.WineColor lColor : Wine.WineColor.values())
+                                {
+                                    lColorAdapter.add(getResources().getString(Wine.getStringIdFromColor(lColor)));
+                                }
+                                ((Spinner)getView().findViewById(R.id.spinner_color)).setAdapter(lColorAdapter);
+                                ((Spinner)getView().findViewById(R.id.spinner_color)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                                {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+                                    {
+                                        //mColor = WineColorConverter.toWineColor(i);
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView)
+                                    {
+                                        //Nothing to do
+                                    }
+                                });
+
+                                ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(lColorAdapter.getPosition(getResources().getString(Wine.getStringIdFromColor(wines.get(0).getColor()))));
+
 
                                 // Populate consumption date spinner
                                 MySpinnerAdapter<Integer> lConsumptionDateAdapter = new MySpinnerAdapter<>(getContext(), android.R.layout.simple_spinner_item);
@@ -486,6 +510,9 @@ public class WineDetailFragment extends Fragment {
 
         getView().findViewById(R.id.spinner_consumption).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
         getView().findViewById(R.id.consumption_date_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+
+        getView().findViewById(R.id.spinner_color).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+        getView().findViewById(R.id.color_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
 
         getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
 
