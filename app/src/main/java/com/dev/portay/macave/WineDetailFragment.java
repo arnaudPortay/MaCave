@@ -480,6 +480,7 @@ public class WineDetailFragment extends Fragment {
                                                 lChip.setTextColor(getResources().getColor(android.R.color.background_light));
                                                 lChip.setCloseIconTintResource(android.R.color.background_light);
                                                 lChip.setCloseIconResource(R.drawable.ic_clear_black_24dp);
+                                                lChip.setCloseIconEnabled(msIsEditing);
                                                 lChip.setOnCloseIconClickListener(new View.OnClickListener()
                                                 {
                                                     @Override
