@@ -234,6 +234,28 @@ public class DataRepository
         }
     }
 
+    public void updateWine(Wine pWine)
+    {
+        new updateWineAsyncTask(mWineDao).execute(pWine);
+    }
+
+    private static class updateWineAsyncTask extends AsyncTask<Wine,Void,Void>
+    {
+        private WineDao mWineDao;
+
+        updateWineAsyncTask(WineDao pWineDao)
+        {
+            this.mWineDao = pWineDao;
+        }
+
+        @Override
+        protected Void doInBackground(Wine... wines)
+        {
+            mWineDao.updateWine(wines[0]);
+            return null;
+        }
+    }
+
     public void updateBottleNumber(int pNumber, int pId)
     {
         new updateBottleNumberAsyncTask(mWineDao, pId, pNumber).execute();

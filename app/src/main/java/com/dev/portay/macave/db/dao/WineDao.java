@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.dev.portay.macave.db.entity.Wine;
 
@@ -22,6 +23,9 @@ public interface WineDao
 
     @Delete
     void deleteWine(Wine pWine);
+
+    @Update
+    void updateWine(Wine pWine);
 
     @Query("SELECT * FROM wine_table")
     LiveData<List<Wine>> getAllWines();

@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.dev.portay.macave.db.entity.Cepage;
 import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
+import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
 
 import java.io.File;
@@ -67,6 +68,10 @@ public class WineDetailFragment extends Fragment {
     private int mWineYearPos;
     private int mWineConsumptionPos;
     private int mWineColorPos;
+    private boolean mWineRebuy;
+    private String mWineLabelPath;
+
+    private int mWineId;
 
 
     /**
@@ -124,6 +129,10 @@ public class WineDetailFragment extends Fragment {
                             if (wines != null && wines.size() > 0)
                             {
                                 enableEdition(msIsEditing);
+
+                                mWineId = wines.get(0).getId();
+                                mWineRebuy = wines.get(0).getRebuy();
+                                mWineLabelPath = wines.get(0).getLabelPath();
 
                                 // Populate year spinner
                                 int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -707,5 +716,27 @@ public class WineDetailFragment extends Fragment {
         ((TextView) getView().findViewById(R.id.producer_detail)).
                 setText(mProducer);
 
+    }
+
+    public void updateWine()
+    {
+        enableEdition(false);
+        int lYear = (int)((Spinner)getView().findViewById(R.id.spinner_year)).getSelectedItem();
+        int lBottleNumber = Integer.parseInt(((TextView)getView().findViewById(R.id.number_detail)).getText().toString());
+        int lConsumptionDate = (int)((Spinner)getView().findViewById(R.id.spinner_consumption)).getSelectedItem();
+        String lNewName = ((TextView)getView().findViewById(R.id.name_detail)).getText().toString();
+        String lNewRegion = ((TextView)getView().findViewById(R.id.region_detail)).getText().toString();
+        String lNewProducer = ((TextView)getView().findViewById(R.id.producer_detail)).getText().toString();
+
+        Wine lWine = new Wine(lNewName, lNewRegion, WineColorConverter.toWineColor(msColorPos), lNewProducer,
+                lYear, lBottleNumber, lConsumptionDate, mWineLabelPath);
+        lWine.setRebuy(mWineRebuy);
+        lWine.setId(mWineId);
+
+        msColorPos = -1;
+        msYearPos = -1;
+        msConsumptionPos = -1;
+
+        DataRepository.getDataRepository().updateWine(lWine);
     }
 }

@@ -56,6 +56,19 @@ public class WineDetailActivity extends AppCompatActivity {
             }
         });
 
+        fabValid.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                msIsEditing = false;
+                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).updateWine();
+                view.setVisibility(View.INVISIBLE);
+                findViewById(R.id.fab_close).setVisibility(View.INVISIBLE);
+                fab.show();
+            }
+        });
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -97,7 +110,10 @@ public class WineDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        findViewById(R.id.fab_close).callOnClick();
+        if (msIsEditing)
+        {
+            findViewById(R.id.fab_close).callOnClick();
+        }
         super.onBackPressed();
     }
 }
