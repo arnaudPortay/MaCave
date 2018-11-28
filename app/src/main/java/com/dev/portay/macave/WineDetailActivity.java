@@ -83,10 +83,17 @@ public class WineDetailActivity extends AppCompatActivity {
         if (id == android.R.id.home || id == android.R.id.closeButton) {
             // This ID represents the Home or Up button. In the case of this
             // activity, the Up button is shown.
-            super.onBackPressed();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        findViewById(R.id.fab_close).callOnClick();
+        super.onBackPressed();
     }
 }
 
