@@ -16,6 +16,8 @@ import android.view.View;
  */
 public class WineDetailActivity extends AppCompatActivity {
 
+    public static boolean msIsEditing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,11 +25,29 @@ public class WineDetailActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        final FloatingActionButton fabCancel = findViewById(R.id.fab_close);
+        findViewById(R.id.fab).setVisibility(msIsEditing ? View.INVISIBLE : View.VISIBLE);
+        findViewById(R.id.fab_close).setVisibility(msIsEditing ? View.VISIBLE : View.INVISIBLE);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                msIsEditing = true;
                 ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(true);
+                view.setVisibility(View.INVISIBLE);
+                fabCancel.show();
+            }
+        });
+
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                msIsEditing = false;
+                view.setVisibility(View.INVISIBLE);
+                fab.show();
+                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).restoreView();
+                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(false);
             }
         });
 

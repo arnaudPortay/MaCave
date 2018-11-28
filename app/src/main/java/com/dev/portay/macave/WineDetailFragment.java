@@ -61,6 +61,13 @@ public class WineDetailFragment extends Fragment {
     private static int msConsumptionPos = -1;
     private static int msColorPos = -1;
 
+    private String mName;
+    private String mRegion;
+    private String mProducer;
+    private int mWineYearPos;
+    private int mWineConsumptionPos;
+    private int mWineColorPos;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -151,6 +158,8 @@ public class WineDetailFragment extends Fragment {
                                 {
                                     ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(msYearPos);
                                 }
+
+                                mWineYearPos = lYearAdapter.getPosition(wines.get(0).getYear());
 
                                 // Set Year
                                 ((TextView) getView().findViewById(R.id.year_detail)).
@@ -250,6 +259,9 @@ public class WineDetailFragment extends Fragment {
                                     }
                                 }
 
+                                mName = wines.get(0).getName();
+
+                                // Set Label
                                 if (wines.get(0).getLabelPath().compareTo("") != 0)
                                 {
                                     File lFile = new File(wines.get(0).getLabelPath());
@@ -284,6 +296,7 @@ public class WineDetailFragment extends Fragment {
                                     ((TextView) getView().findViewById(R.id.region_detail)).
                                             setText(wines.get(0).getOrigin());
                                 }
+                                mRegion = wines.get(0).getOrigin();
 
                                 // Set Producer
                                 if (!msIsEditing)
@@ -291,6 +304,7 @@ public class WineDetailFragment extends Fragment {
                                     ((TextView) getView().findViewById(R.id.producer_detail)).
                                             setText(wines.get(0).getProducer());
                                 }
+                                mProducer = wines.get(0).getProducer();
 
                                 // Set Color
                                 ((TextView) getView().findViewById(R.id.color_detail))
@@ -326,6 +340,7 @@ public class WineDetailFragment extends Fragment {
                                 {
                                     ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(msColorPos);
                                 }
+                                mWineColorPos = lColorAdapter.getPosition(getResources().getString(Wine.getStringIdFromColor(wines.get(0).getColor())));
 
 
                                 // Populate consumption date spinner
@@ -360,6 +375,7 @@ public class WineDetailFragment extends Fragment {
                                 {
                                     ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(msConsumptionPos);
                                 }
+                                mWineConsumptionPos = lConsumptionDateAdapter.getPosition(wines.get(0).getConsumptionDate());
 
                                 // Set Consumption Date
                                 ((TextView) getView().findViewById(R.id.consumption_date_detail))
@@ -667,5 +683,29 @@ public class WineDetailFragment extends Fragment {
         }
     }
 
+    public void restoreView()
+    {
+        msColorPos = -1;
+        msYearPos = -1;
+        msConsumptionPos = -1;
 
+        ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(mWineYearPos);
+        ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(mWineColorPos);
+        ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(mWineConsumptionPos);
+
+        if (getActivity().findViewById(R.id.toolbar_layout) != null)
+        {
+            // Set title in Toolbar
+            ((CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout))
+                    .setTitle(mName);
+        }
+        ((TextView)getActivity().findViewById(R.id.name_detail)).setText(mName);
+
+        ((TextView) getView().findViewById(R.id.region_detail)).
+                setText(mRegion);
+
+        ((TextView) getView().findViewById(R.id.producer_detail)).
+                setText(mProducer);
+
+    }
 }
