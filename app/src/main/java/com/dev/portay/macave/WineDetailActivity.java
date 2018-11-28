@@ -27,8 +27,10 @@ public class WineDetailActivity extends AppCompatActivity {
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         final FloatingActionButton fabCancel = findViewById(R.id.fab_close);
+        final FloatingActionButton fabValid = findViewById(R.id.fab_validate);
         findViewById(R.id.fab).setVisibility(msIsEditing ? View.INVISIBLE : View.VISIBLE);
         findViewById(R.id.fab_close).setVisibility(msIsEditing ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.fab_validate).setVisibility(msIsEditing ? View.VISIBLE : View.INVISIBLE);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +39,8 @@ public class WineDetailActivity extends AppCompatActivity {
                 ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(true);
                 view.setVisibility(View.INVISIBLE);
                 fabCancel.show();
+                fabValid.show();
+
             }
         });
 
@@ -45,6 +49,7 @@ public class WineDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 msIsEditing = false;
                 view.setVisibility(View.INVISIBLE);
+                findViewById(R.id.fab_validate).setVisibility(View.INVISIBLE);
                 fab.show();
                 ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).restoreView();
                 ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(false);
