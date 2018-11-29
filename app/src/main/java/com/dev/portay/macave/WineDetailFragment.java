@@ -5,18 +5,25 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.method.KeyListener;
 import android.text.method.TextKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +43,17 @@ import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A fragment representing a single Wine detail screen.
@@ -61,6 +74,7 @@ public class WineDetailFragment extends Fragment {
     private static int msYearPos = -1;
     private static int msConsumptionPos = -1;
     private static int msColorPos = -1;
+    private static String msLabelPath = "";
 
     private String mName;
     private String mRegion;
@@ -70,6 +84,7 @@ public class WineDetailFragment extends Fragment {
     private int mWineColorPos;
     private boolean mWineRebuy;
     private String mWineLabelPath;
+    private boolean mHasCamera;
 
     private int mWineId;
 
@@ -88,6 +103,8 @@ public class WineDetailFragment extends Fragment {
 
         mDishesNames = new ArrayList<>();
         mCepagesNames = new ArrayList<>();
+
+        mHasCamera = getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
 
         if (getArguments().containsKey(ARG_ITEM_ID))
         {
@@ -117,7 +134,6 @@ public class WineDetailFragment extends Fragment {
                 }
             });
 
-
             ViewModelProviders.of(this).get(WineViewModel.class)
                     .getWineById(getArguments().getInt(ARG_ITEM_ID))
                     .observe(this, new Observer<List<Wine>>()
@@ -133,6 +149,51 @@ public class WineDetailFragment extends Fragment {
                                 mWineId = wines.get(0).getId();
                                 mWineRebuy = wines.get(0).getRebuy();
                                 mWineLabelPath = wines.get(0).getLabelPath();
+
+                                // Change label picture behaviour
+                                getView().findViewById(R.id.updatePictureButton).setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        Intent lTakePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                                        // Check if there is an app that can handle the intent
+                                        if (lTakePictureIntent.resolveActivity(view.getContext().getPackageManager()) != null) {
+
+                                            File lPhotoFile = null;
+                                            try
+                                            {
+                                                // Create file
+                                                lPhotoFile = createImageFile();
+                                            }
+                                            catch (IOException lErr)
+                                            {
+
+                                                Log.e("APY", lErr.getMessage());
+                                            }
+
+                                            if (lPhotoFile != null)
+                                            {
+                                                // Define where the image is going to be saved
+                                                Uri lPhotoUri = FileProvider.getUriForFile(getContext(), "com.dev.portay.macave.fileprovider", lPhotoFile);
+                                                // Redirect output to our path
+                                                lTakePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, lPhotoUri);
+
+                                                // Grant permission to all relevant apps. Default should be the classic camera app
+                                                List<ResolveInfo> resInfoList = view.getContext().getPackageManager().queryIntentActivities(lTakePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                                                for (ResolveInfo resolveInfo : resInfoList) {
+                                                    String packageName = resolveInfo.activityInfo.packageName;
+                                                    view.getContext().grantUriPermission(packageName, lPhotoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                }
+
+                                                // Start the default app for taking pictures
+                                                startActivityForResult(lTakePictureIntent, AddWineActivity.REQUEST_IMAGE_CAPTURE);
+                                            }
+                                        }
+                                    }
+                                });
+
 
                                 // Populate year spinner
                                 int lCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -679,7 +740,7 @@ public class WineDetailFragment extends Fragment {
 
         getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
 
-        getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit ? View.VISIBLE : View.GONE);
+        getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
 
         setCepagesCloseIconVisibility(pEdit);
 
@@ -740,5 +801,62 @@ public class WineDetailFragment extends Fragment {
         msConsumptionPos = -1;
 
         DataRepository.getDataRepository().updateWine(lWine);
+    }
+
+    private File createImageFile() throws IOException
+    {
+        String lTimeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String lImageFileName = "JPEG_" + lTimeStamp;
+        File lStorageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File lImage = File.createTempFile(lImageFileName, ".jpg", lStorageDir);
+
+        msLabelPath = lImage.getAbsolutePath();
+
+        return lImage;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == AddWineActivity.REQUEST_IMAGE_CAPTURE)
+        {
+            if (resultCode == RESULT_CANCELED)
+            {
+                msLabelPath = "";
+            }
+            else if (resultCode == RESULT_OK )
+            {
+                updateLabelPreview();
+            }
+        }
+    }
+
+    private void updateLabelPreview()
+    {
+        //Update label picture
+        File lFile = new File(msLabelPath);
+        if (lFile.exists())
+        {
+            Bitmap lLabelBitmap = BitmapFactory.decodeFile(msLabelPath);
+
+            if (lLabelBitmap != null && getView().findViewById(R.id.LabelImageView) != null)
+            {
+                ((ImageView)getView().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
+
+                getView().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        // Start activity to see image
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, LabelDisplayActivity.class);
+                        intent.putExtra(LabelDisplayActivity.ARG_LABEL, msLabelPath);
+
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 }

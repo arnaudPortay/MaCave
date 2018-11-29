@@ -99,7 +99,8 @@ public class AddWineActivity extends AppCompatActivity
                     Intent lTakePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     // Check if there is an app that can handle the intent
-                    if (lTakePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    if (lTakePictureIntent.resolveActivity(getPackageManager()) != null)
+                    {
 
                         File lPhotoFile = null;
                         try
