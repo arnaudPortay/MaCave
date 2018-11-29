@@ -679,6 +679,8 @@ public class WineDetailFragment extends Fragment {
 
         getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
 
+        getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit ? View.VISIBLE : View.GONE);
+
         setCepagesCloseIconVisibility(pEdit);
 
         getView().findViewById(R.id.name_detail).setVisibility(pEdit ? View.VISIBLE : getView().findViewById(R.id.toolbar_layout) == null ? View.VISIBLE : View.INVISIBLE);
