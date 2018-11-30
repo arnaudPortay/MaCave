@@ -75,6 +75,7 @@ public class WineDetailFragment extends Fragment {
     private static int msConsumptionPos = -1;
     private static int msColorPos = -1;
     private static String msLabelPath = "";
+    private static String msPreviousLabelPath = "";
 
     private String mName;
     private String mRegion;
@@ -332,12 +333,26 @@ public class WineDetailFragment extends Fragment {
                                 mName = wines.get(0).getName();
 
                                 // Set Label
-                                if (wines.get(0).getLabelPath().compareTo("") != 0)
+                                String lTempPath = "";
+                                if (msIsEditing )
                                 {
-                                    File lFile = new File(wines.get(0).getLabelPath());
+                                    if (msLabelPath.compareTo("") != 0)
+                                    {
+                                        lTempPath = msLabelPath;
+                                    }
+                                }
+                                else if (wines.get(0).getLabelPath().compareTo("") != 0)
+                                {
+                                    lTempPath = wines.get(0).getLabelPath();
+                                }
+
+                                if (lTempPath.compareTo("") != 0)
+                                {
+                                    final String lLabelPath = lTempPath;
+                                    File lFile = new File(lLabelPath);
                                     if (lFile.exists())
                                     {
-                                        Bitmap lLabelBitmap = BitmapFactory.decodeFile(wines.get(0).getLabelPath());
+                                        Bitmap lLabelBitmap = BitmapFactory.decodeFile(lLabelPath);
 
                                         if (lLabelBitmap != null && getActivity().findViewById(R.id.LabelImageView) != null)
                                         {
@@ -351,7 +366,7 @@ public class WineDetailFragment extends Fragment {
                                                     // Start activity to see image
                                                     Context context = view.getContext();
                                                     Intent intent = new Intent(context, LabelDisplayActivity.class);
-                                                    intent.putExtra(LabelDisplayActivity.ARG_LABEL, wines.get(0).getLabelPath());
+                                                    intent.putExtra(LabelDisplayActivity.ARG_LABEL, lLabelPath);
 
                                                     context.startActivity(intent);
                                                 }
@@ -741,6 +756,7 @@ public class WineDetailFragment extends Fragment {
         getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
 
         getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
+        getView().findViewById(R.id.deleteLabelButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
 
         setCepagesCloseIconVisibility(pEdit);
 
@@ -760,6 +776,11 @@ public class WineDetailFragment extends Fragment {
         msColorPos = -1;
         msYearPos = -1;
         msConsumptionPos = -1;
+
+        deletePicture();
+        msLabelPath = mWineLabelPath;
+        updateLabelPreview();
+        msLabelPath="";
 
         ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(mWineYearPos);
         ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(mWineColorPos);
@@ -791,7 +812,7 @@ public class WineDetailFragment extends Fragment {
         String lNewRegion = ((TextView)getView().findViewById(R.id.region_detail)).getText().toString();
         String lNewProducer = ((TextView)getView().findViewById(R.id.producer_detail)).getText().toString();
 
-        Wine lWine = new Wine(lNewName, lNewRegion, WineColorConverter.toWineColor(msColorPos), lNewProducer,
+        Wine lWine = new Wine(lNewName, lNewRegion, WineColorConverter.toWineColor(((Spinner)getView().findViewById(R.id.spinner_color)).getSelectedItemPosition()), lNewProducer,
                 lYear, lBottleNumber, lConsumptionDate, mWineLabelPath);
         lWine.setRebuy(mWineRebuy);
         lWine.setId(mWineId);
@@ -799,6 +820,8 @@ public class WineDetailFragment extends Fragment {
         msColorPos = -1;
         msYearPos = -1;
         msConsumptionPos = -1;
+        msLabelPath = "";
+        msPreviousLabelPath = "";
 
         DataRepository.getDataRepository().updateWine(lWine);
     }
@@ -810,6 +833,7 @@ public class WineDetailFragment extends Fragment {
         File lStorageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File lImage = File.createTempFile(lImageFileName, ".jpg", lStorageDir);
 
+        msPreviousLabelPath = msLabelPath;
         msLabelPath = lImage.getAbsolutePath();
 
         return lImage;
@@ -822,10 +846,19 @@ public class WineDetailFragment extends Fragment {
         {
             if (resultCode == RESULT_CANCELED)
             {
-                msLabelPath = "";
+                msLabelPath = msPreviousLabelPath;
+                msPreviousLabelPath = "";
             }
             else if (resultCode == RESULT_OK )
             {
+                if (msPreviousLabelPath.compareTo("")!= 0)
+                {
+                    // Delete previous picture
+                    File lFile = new File(msPreviousLabelPath);
+                    lFile.delete();
+                    msPreviousLabelPath = "";
+                }
+
                 updateLabelPreview();
             }
         }
@@ -858,5 +891,25 @@ public class WineDetailFragment extends Fragment {
                 });
             }
         }
+    }
+
+    private void deletePicture()
+    {
+        if (msPreviousLabelPath.compareTo("")!= 0 )
+        {
+            // Delete previous picture
+            File lFile = new File(msPreviousLabelPath);
+            lFile.delete();
+        }
+
+        if (msPreviousLabelPath.compareTo("")!= 0 )
+        {
+            // Delete current picture
+            File lFile = new File(msLabelPath);
+            lFile.delete();
+        }
+
+        msLabelPath = "";
+        msPreviousLabelPath = "";
     }
 }

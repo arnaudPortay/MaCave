@@ -721,8 +721,4 @@ public class AddWineActivity extends AppCompatActivity
             }
         }
     }
-
-
-
-
 }
