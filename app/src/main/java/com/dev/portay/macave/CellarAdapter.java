@@ -118,6 +118,10 @@ public class CellarAdapter extends RecyclerView.Adapter<CellarAdapter.WineViewHo
 
             if (mTwoPane)
             {
+                if (mParentActivity.mIsEditing)
+                {
+                    mParentActivity.findViewById(R.id.fabCancel).callOnClick();
+                }
                 updateTabletView();
             }
             else

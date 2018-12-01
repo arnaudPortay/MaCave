@@ -50,6 +50,7 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
     private DrawerLayout mDrawerLayout;
     private Observer<List<Wine>> mObserver;
     private SearchView mSearchView;
+    public boolean mIsEditing;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -107,6 +108,8 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+
+            mIsEditing = false;
         }
 
         final RecyclerView recyclerView = findViewById(R.id.wine_list);
@@ -117,6 +120,72 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             lListAdapter.updateTabletView();
         }
         recyclerView.setAdapter(lListAdapter);
+
+        findViewById(R.id.fabEdit).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (getSupportFragmentManager().getFragments().size() != 0 && getSupportFragmentManager().getFragments().get(0) instanceof WineDetailFragment)
+                {
+                    mIsEditing = true;
+                    ((WineDetailFragment) getSupportFragmentManager().getFragments().get(0)).enableEdition(true);
+                    view.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fabValid).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fabCancel).setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        findViewById(R.id.fabCancel).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (getSupportFragmentManager().getFragments().size() != 0 && getSupportFragmentManager().getFragments().get(0) instanceof WineDetailFragment)
+                {
+                    mIsEditing = false;
+                    view.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fabValid).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fabEdit).setVisibility(View.VISIBLE);
+
+                    ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).restoreView();
+                    ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).enableEdition(false);
+                }
+            }
+        });
+
+        findViewById(R.id.fabValid).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (getSupportFragmentManager().getFragments().size() != 0 && getSupportFragmentManager().getFragments().get(0) instanceof WineDetailFragment)
+                {
+                    mIsEditing = false;
+                    view.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fabCancel).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fabEdit).setVisibility(View.VISIBLE);
+
+                    ((WineDetailFragment) getSupportFragmentManager().getFragments().get(0)).updateWine();
+                }
+            }
+        });
+
+        findViewById(R.id.fabCancel).callOnClick();
+
+        if (mTwoPane)
+        {
+            findViewById(R.id.fabEdit).setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            findViewById(R.id.fabEdit).setVisibility(View.INVISIBLE);
+        }
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         mWineViewModel = ViewModelProviders.of(this).get(WineViewModel.class);
@@ -155,6 +224,12 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
+
+                        findViewById(R.id.fabCancel).callOnClick();
+                        if (!mTwoPane)
+                        {
+                            findViewById(R.id.fabEdit).setVisibility(View.INVISIBLE);
+                        }
 
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here

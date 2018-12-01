@@ -741,40 +741,46 @@ public class WineDetailFragment extends Fragment {
         msIsEditing = pEdit;
 
         KeyListener lListener = pEdit ? TextKeyListener.getInstance() : null;
-        ((EditText)getView().findViewById(R.id.name_detail)).setKeyListener(lListener);
-        getView().findViewById(R.id.name_detail).setFocusable(pEdit);
-        getView().findViewById(R.id.name_detail).setFocusableInTouchMode(pEdit);
-        getView().findViewById(R.id.name_detail).setClickable(pEdit);
+        try
+        {
+            ((EditText) getView().findViewById(R.id.name_detail)).setKeyListener(lListener);
+            getView().findViewById(R.id.name_detail).setFocusable(pEdit);
+            getView().findViewById(R.id.name_detail).setFocusableInTouchMode(pEdit);
+            getView().findViewById(R.id.name_detail).setClickable(pEdit);
 
-        ((EditText)getView().findViewById(R.id.region_detail)).setKeyListener(lListener);
-        getView().findViewById(R.id.region_detail).setFocusable(pEdit);
-        getView().findViewById(R.id.region_detail).setFocusableInTouchMode(pEdit);
-        getView().findViewById(R.id.region_detail).setClickable(pEdit);
+            ((EditText) getView().findViewById(R.id.region_detail)).setKeyListener(lListener);
+            getView().findViewById(R.id.region_detail).setFocusable(pEdit);
+            getView().findViewById(R.id.region_detail).setFocusableInTouchMode(pEdit);
+            getView().findViewById(R.id.region_detail).setClickable(pEdit);
 
-        ((EditText)getView().findViewById(R.id.producer_detail)).setKeyListener(lListener);
-        getView().findViewById(R.id.producer_detail).setFocusable(pEdit);
-        getView().findViewById(R.id.producer_detail).setFocusableInTouchMode(pEdit);
-        getView().findViewById(R.id.producer_detail).setClickable(pEdit);
+            ((EditText) getView().findViewById(R.id.producer_detail)).setKeyListener(lListener);
+            getView().findViewById(R.id.producer_detail).setFocusable(pEdit);
+            getView().findViewById(R.id.producer_detail).setFocusableInTouchMode(pEdit);
+            getView().findViewById(R.id.producer_detail).setClickable(pEdit);
 
-        getView().findViewById(R.id.spinner_year).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
-        getView().findViewById(R.id.year_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+            getView().findViewById(R.id.spinner_year).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+            getView().findViewById(R.id.year_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
 
-        getView().findViewById(R.id.spinner_consumption).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
-        getView().findViewById(R.id.consumption_date_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+            getView().findViewById(R.id.spinner_consumption).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+            getView().findViewById(R.id.consumption_date_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
 
-        getView().findViewById(R.id.spinner_color).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
-        getView().findViewById(R.id.color_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
+            getView().findViewById(R.id.spinner_color).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+            getView().findViewById(R.id.color_detail).setVisibility(pEdit ? View.INVISIBLE : View.VISIBLE);
 
-        getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
+            getView().findViewById(R.id.del_wine_button).setVisibility(pEdit ? View.VISIBLE : View.GONE);
 
-        getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
+            getView().findViewById(R.id.chip_addCepage).setVisibility(pEdit ? View.VISIBLE : View.INVISIBLE);
 
-        getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
-        getView().findViewById(R.id.deleteLabelButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
+            getView().findViewById(R.id.updatePictureButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
+            getView().findViewById(R.id.deleteLabelButton).setVisibility(pEdit && mHasCamera ? View.VISIBLE : View.GONE);
 
-        setCepagesCloseIconVisibility(pEdit);
+            setCepagesCloseIconVisibility(pEdit);
 
-        getView().findViewById(R.id.name_detail).setVisibility(pEdit ? View.VISIBLE : getView().findViewById(R.id.toolbar_layout) == null ? View.VISIBLE : View.INVISIBLE);
+            getView().findViewById(R.id.name_detail).setVisibility(pEdit ? View.VISIBLE : getView().findViewById(R.id.toolbar_layout) == null ? View.VISIBLE : View.INVISIBLE);
+        }
+        catch (NullPointerException lErr)
+        {
+        }
     }
 
     private void setCepagesCloseIconVisibility(boolean pVisibility)
@@ -798,9 +804,12 @@ public class WineDetailFragment extends Fragment {
         updateLabelPreview();
         msLabelPath="";
 
-        ((Spinner)getView().findViewById(R.id.spinner_year)).setSelection(mWineYearPos);
-        ((Spinner)getView().findViewById(R.id.spinner_color)).setSelection(mWineColorPos);
-        ((Spinner)getView().findViewById(R.id.spinner_consumption)).setSelection(mWineConsumptionPos);
+        if (getView() != null)
+        {
+            ((Spinner) getView().findViewById(R.id.spinner_year)).setSelection(mWineYearPos);
+            ((Spinner) getView().findViewById(R.id.spinner_color)).setSelection(mWineColorPos);
+            ((Spinner) getView().findViewById(R.id.spinner_consumption)).setSelection(mWineConsumptionPos);
+        }
 
         if (getActivity().findViewById(R.id.toolbar_layout) != null)
         {
@@ -808,13 +817,20 @@ public class WineDetailFragment extends Fragment {
             ((CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout))
                     .setTitle(mName);
         }
-        ((TextView)getActivity().findViewById(R.id.name_detail)).setText(mName);
+        try
+        {
+            ((TextView) getActivity().findViewById(R.id.name_detail)).setText(mName);
 
-        ((TextView) getView().findViewById(R.id.region_detail)).
-                setText(mRegion);
+            ((TextView) getView().findViewById(R.id.region_detail)).
+                    setText(mRegion);
 
-        ((TextView) getView().findViewById(R.id.producer_detail)).
-                setText(mProducer);
+            ((TextView) getView().findViewById(R.id.producer_detail)).
+                    setText(mProducer);
+        }
+        catch (NullPointerException lErr)
+        {
+            //do nothing
+        }
 
     }
 
@@ -898,34 +914,37 @@ public class WineDetailFragment extends Fragment {
     private void updateLabelPreview()
     {
         //Update label picture
-        File lFile = new File(msLabelPath);
-        if (lFile.exists())
+        if (msLabelPath != null)
         {
-            Bitmap lLabelBitmap = BitmapFactory.decodeFile(msLabelPath);
-
-            if (lLabelBitmap != null && getView().findViewById(R.id.LabelImageView) != null)
+            File lFile = new File(msLabelPath);
+            if (lFile.exists())
             {
-                ((ImageView)getView().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
+                Bitmap lLabelBitmap = BitmapFactory.decodeFile(msLabelPath);
 
-                getView().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                if (lLabelBitmap != null && getView().findViewById(R.id.LabelImageView) != null)
                 {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        // Start activity to see image
-                        Context context = view.getContext();
-                        Intent intent = new Intent(context, LabelDisplayActivity.class);
-                        intent.putExtra(LabelDisplayActivity.ARG_LABEL, msLabelPath);
+                    ((ImageView) getView().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
 
-                        context.startActivity(intent);
-                    }
-                });
+                    getView().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            // Start activity to see image
+                            Context context = view.getContext();
+                            Intent intent = new Intent(context, LabelDisplayActivity.class);
+                            intent.putExtra(LabelDisplayActivity.ARG_LABEL, msLabelPath);
+
+                            context.startActivity(intent);
+                        }
+                    });
+                }
             }
-        }
-        else
-        {
-            ((ImageView)getView().findViewById(R.id.LabelImageView)).setImageResource(android.R.drawable.ic_menu_gallery);
-            getView().findViewById(R.id.LabelImageView).setOnClickListener(null);
+            else
+            {
+                ((ImageView) getView().findViewById(R.id.LabelImageView)).setImageResource(android.R.drawable.ic_menu_gallery);
+                getView().findViewById(R.id.LabelImageView).setOnClickListener(null);
+            }
         }
     }
 

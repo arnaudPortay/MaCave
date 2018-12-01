@@ -16,7 +16,7 @@ import android.view.View;
  */
 public class WineDetailActivity extends AppCompatActivity {
 
-    public static boolean msIsEditing = false;
+    private static boolean msIsEditing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +62,11 @@ public class WineDetailActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 msIsEditing = false;
-                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).updateWine();
                 view.setVisibility(View.INVISIBLE);
                 findViewById(R.id.fab_close).setVisibility(View.INVISIBLE);
                 fab.show();
+
+                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).updateWine();
             }
         });
 
