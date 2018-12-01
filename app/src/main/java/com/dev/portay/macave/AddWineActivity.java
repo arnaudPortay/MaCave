@@ -555,6 +555,7 @@ public class AddWineActivity extends AppCompatActivity
                 deletePictures();
                 ((ImageView)findViewById(R.id.LabelPreview)).setImageResource(android.R.drawable.ic_menu_gallery);
                 lDelImageButton.setVisibility(View.INVISIBLE);
+                findViewById(R.id.LabelPreview).setOnClickListener(null);
             }
         });
 

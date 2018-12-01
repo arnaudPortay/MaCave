@@ -76,6 +76,7 @@ public class WineDetailFragment extends Fragment {
     private static int msColorPos = -1;
     private static String msLabelPath = "";
     private static String msPreviousLabelPath = "";
+    private static boolean msDeletePicture = false;
 
     private String mName;
     private String mRegion;
@@ -696,6 +697,19 @@ public class WineDetailFragment extends Fragment {
                                     lDialog.show();
                                 }
                             });
+
+                            // Delete Label Picture Button
+                            getView().findViewById(R.id.deleteLabelButton).setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    msDeletePicture = true;
+                                    ((ImageView)getView().findViewById(R.id.LabelImageView)).setImageResource(android.R.drawable.ic_menu_gallery);
+                                    getView().findViewById(R.id.LabelImageView).setOnClickListener(null);
+                                    deletePicture();
+                                }
+                            });
                         }
                     });
 
@@ -776,8 +790,10 @@ public class WineDetailFragment extends Fragment {
         msColorPos = -1;
         msYearPos = -1;
         msConsumptionPos = -1;
+        msDeletePicture = false;
 
         deletePicture();
+
         msLabelPath = mWineLabelPath;
         updateLabelPreview();
         msLabelPath="";
@@ -811,9 +827,22 @@ public class WineDetailFragment extends Fragment {
         String lNewName = ((TextView)getView().findViewById(R.id.name_detail)).getText().toString();
         String lNewRegion = ((TextView)getView().findViewById(R.id.region_detail)).getText().toString();
         String lNewProducer = ((TextView)getView().findViewById(R.id.producer_detail)).getText().toString();
+        String lWineLabelPath = msDeletePicture ? "" : msLabelPath.compareTo("") == 0 ? "" : msLabelPath;
+        if (msDeletePicture)
+        {
+            deletePicture();
+
+            if (mWineLabelPath.compareTo("")!= 0)
+            {
+                // Delete previous picture
+                File lFile = new File(mWineLabelPath);
+                lFile.delete();
+                mWineLabelPath = "";
+            }
+        }
 
         Wine lWine = new Wine(lNewName, lNewRegion, WineColorConverter.toWineColor(((Spinner)getView().findViewById(R.id.spinner_color)).getSelectedItemPosition()), lNewProducer,
-                lYear, lBottleNumber, lConsumptionDate, mWineLabelPath);
+                lYear, lBottleNumber, lConsumptionDate, lWineLabelPath);
         lWine.setRebuy(mWineRebuy);
         lWine.setId(mWineId);
 
@@ -822,6 +851,7 @@ public class WineDetailFragment extends Fragment {
         msConsumptionPos = -1;
         msLabelPath = "";
         msPreviousLabelPath = "";
+        msDeletePicture = false;
 
         DataRepository.getDataRepository().updateWine(lWine);
     }
@@ -859,6 +889,7 @@ public class WineDetailFragment extends Fragment {
                     msPreviousLabelPath = "";
                 }
 
+                msDeletePicture = false;
                 updateLabelPreview();
             }
         }
@@ -891,6 +922,11 @@ public class WineDetailFragment extends Fragment {
                 });
             }
         }
+        else
+        {
+            ((ImageView)getView().findViewById(R.id.LabelImageView)).setImageResource(android.R.drawable.ic_menu_gallery);
+            getView().findViewById(R.id.LabelImageView).setOnClickListener(null);
+        }
     }
 
     private void deletePicture()
@@ -902,7 +938,7 @@ public class WineDetailFragment extends Fragment {
             lFile.delete();
         }
 
-        if (msPreviousLabelPath.compareTo("")!= 0 )
+        if (msLabelPath.compareTo("")!= 0 )
         {
             // Delete current picture
             File lFile = new File(msLabelPath);
