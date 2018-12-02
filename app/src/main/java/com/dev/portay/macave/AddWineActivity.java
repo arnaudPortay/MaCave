@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +32,7 @@ import android.widget.Spinner;
 import com.dev.portay.macave.db.entity.Wine;
 import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -698,28 +697,23 @@ public class AddWineActivity extends AppCompatActivity
     {
         //Update label picture
         File lFile = new File(mCurrentPhotoPath);
-        if (lFile.exists())
+        if (lFile.exists() && findViewById(R.id.LabelPreview) != null)
         {
-            Bitmap lLabelBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            Picasso.get().load(lFile).placeholder(android.R.drawable.ic_menu_gallery).into((ImageView)findViewById(R.id.LabelPreview));
 
-            if (lLabelBitmap != null && findViewById(R.id.LabelPreview) != null)
+            findViewById(R.id.LabelPreview).setOnClickListener(new View.OnClickListener()
             {
-                ((ImageView)findViewById(R.id.LabelPreview)).setImageBitmap(lLabelBitmap);
-
-                findViewById(R.id.LabelPreview).setOnClickListener(new View.OnClickListener()
+                @Override
+                public void onClick(View view)
                 {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        // Start activity to see image
-                        Context context = view.getContext();
-                        Intent intent = new Intent(context, LabelDisplayActivity.class);
-                        intent.putExtra(LabelDisplayActivity.ARG_LABEL, mCurrentPhotoPath);
+                    // Start activity to see image
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, LabelDisplayActivity.class);
+                    intent.putExtra(LabelDisplayActivity.ARG_LABEL, mCurrentPhotoPath);
 
-                        context.startActivity(intent);
-                    }
-                });
-            }
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

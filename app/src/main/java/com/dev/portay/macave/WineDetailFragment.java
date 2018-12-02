@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,6 +39,7 @@ import com.dev.portay.macave.db.entity.Dish;
 import com.dev.portay.macave.db.entity.Wine;
 import com.dev.portay.macave.db.entity.WineColorConverter;
 import com.dev.portay.macave.util.MySpinnerAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -351,28 +350,23 @@ public class WineDetailFragment extends Fragment {
                                 {
                                     final String lLabelPath = lTempPath;
                                     File lFile = new File(lLabelPath);
-                                    if (lFile.exists())
+                                    if (lFile.exists() && getActivity().findViewById(R.id.LabelImageView) != null)
                                     {
-                                        Bitmap lLabelBitmap = BitmapFactory.decodeFile(lLabelPath);
+                                        Picasso.get().load(lFile).placeholder(android.R.drawable.ic_menu_gallery).into((ImageView)getView().findViewById(R.id.LabelImageView));
 
-                                        if (lLabelBitmap != null && getActivity().findViewById(R.id.LabelImageView) != null)
+                                        getActivity().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
                                         {
-                                            ((ImageView)getActivity().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
-
-                                            getActivity().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                                            @Override
+                                            public void onClick(View view)
                                             {
-                                                @Override
-                                                public void onClick(View view)
-                                                {
-                                                    // Start activity to see image
-                                                    Context context = view.getContext();
-                                                    Intent intent = new Intent(context, LabelDisplayActivity.class);
-                                                    intent.putExtra(LabelDisplayActivity.ARG_LABEL, lLabelPath);
+                                                // Start activity to see image
+                                                Context context = view.getContext();
+                                                Intent intent = new Intent(context, LabelDisplayActivity.class);
+                                                intent.putExtra(LabelDisplayActivity.ARG_LABEL, lLabelPath);
 
-                                                    context.startActivity(intent);
-                                                }
-                                            });
-                                        }
+                                                context.startActivity(intent);
+                                            }
+                                        });
                                     }
                                 }
 
@@ -917,32 +911,27 @@ public class WineDetailFragment extends Fragment {
         if (msLabelPath != null)
         {
             File lFile = new File(msLabelPath);
-            if (lFile.exists())
+
+            if (lFile.exists() && getView().findViewById(R.id.LabelImageView) != null)
             {
-                Bitmap lLabelBitmap = BitmapFactory.decodeFile(msLabelPath);
+                Picasso.get().load(lFile).placeholder(android.R.drawable.ic_menu_gallery).into((ImageView)getView().findViewById(R.id.LabelImageView));
 
-                if (lLabelBitmap != null && getView().findViewById(R.id.LabelImageView) != null)
+                getView().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
                 {
-                    ((ImageView) getView().findViewById(R.id.LabelImageView)).setImageBitmap(lLabelBitmap);
-
-                    getView().findViewById(R.id.LabelImageView).setOnClickListener(new View.OnClickListener()
+                    @Override
+                    public void onClick(View view)
                     {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            // Start activity to see image
-                            Context context = view.getContext();
-                            Intent intent = new Intent(context, LabelDisplayActivity.class);
-                            intent.putExtra(LabelDisplayActivity.ARG_LABEL, msLabelPath);
+                        // Start activity to see image
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, LabelDisplayActivity.class);
+                        intent.putExtra(LabelDisplayActivity.ARG_LABEL, msLabelPath);
 
-                            context.startActivity(intent);
-                        }
-                    });
-                }
+                        context.startActivity(intent);
+                    }
+                });
             }
             else
             {
-                ((ImageView) getView().findViewById(R.id.LabelImageView)).setImageResource(android.R.drawable.ic_menu_gallery);
                 getView().findViewById(R.id.LabelImageView).setOnClickListener(null);
             }
         }

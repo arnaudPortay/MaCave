@@ -1,12 +1,12 @@
 package com.dev.portay.macave;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -25,23 +25,19 @@ public class LabelDisplayActivity extends AppCompatActivity
         if (lLabel.compareTo("") != 0)
         {
             File lFile = new File(lLabel);
-            if (lFile.exists())
+            if (lFile.exists() && findViewById(R.id.LabelView) != null)
             {
-                Bitmap lLabelBitmap = BitmapFactory.decodeFile(lLabel);
+                Picasso.get().load(lFile).placeholder(android.R.drawable.ic_menu_gallery).into((ImageView)findViewById(R.id.LabelView));
 
-                if (lLabelBitmap != null && findViewById(R.id.LabelView) != null)
+                findViewById(R.id.LabelView).setOnClickListener(new View.OnClickListener()
                 {
-                    ((ImageView) findViewById(R.id.LabelView)).setImageBitmap(lLabelBitmap);
-                    findViewById(R.id.LabelView).setOnClickListener(new View.OnClickListener()
+                    @Override
+                    public void onClick(View view)
                     {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            setResult(RESULT_OK, new Intent());
-                            finish();
-                        }
-                    });
-                }
+                        setResult(RESULT_OK, new Intent());
+                        finish();
+                    }
+                });
             }
         }
     }
