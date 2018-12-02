@@ -2,6 +2,7 @@ package com.dev.portay.macave;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -165,13 +167,32 @@ public class CellarListActivity extends AppCompatActivity implements SearchView.
             {
                 if (getSupportFragmentManager().getFragments().size() != 0 && getSupportFragmentManager().getFragments().get(0) instanceof WineDetailFragment)
                 {
-                    mIsEditing = false;
-                    view.setVisibility(View.INVISIBLE);
-                    findViewById(R.id.fabCancel).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                    findViewById(R.id.fabEdit).setVisibility(View.VISIBLE);
+                    if (((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).canUpateWine())
+                    {
+                        mIsEditing = false;
+                        view.setVisibility(View.INVISIBLE);
+                        findViewById(R.id.fabCancel).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        findViewById(R.id.fabEdit).setVisibility(View.VISIBLE);
 
-                    ((WineDetailFragment) getSupportFragmentManager().getFragments().get(0)).updateWine();
+                        ((WineDetailFragment) getSupportFragmentManager().getFragments().get(0)).updateWine();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext());
+                        lBuilder.setTitle(R.string.add_wine_error_title);
+                        lBuilder.setMessage(R.string.add_wine_error_message);
+                        lBuilder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i)
+                            {
+                                // Nothing to do
+                            }
+                        });
+                        AlertDialog lDialog = lBuilder.create();
+                        lDialog.show();
+                    }
                 }
             }
         });

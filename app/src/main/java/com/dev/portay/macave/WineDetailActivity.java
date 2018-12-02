@@ -1,8 +1,10 @@
 package com.dev.portay.macave;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -61,12 +63,32 @@ public class WineDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                msIsEditing = false;
-                view.setVisibility(View.INVISIBLE);
-                findViewById(R.id.fab_close).setVisibility(View.INVISIBLE);
-                fab.show();
 
-                ((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).updateWine();
+                if (((WineDetailFragment)getSupportFragmentManager().getFragments().get(0)).canUpateWine())
+                {
+                    msIsEditing = false;
+                    view.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.fab_close).setVisibility(View.INVISIBLE);
+                    fab.show();
+
+                    ((WineDetailFragment) getSupportFragmentManager().getFragments().get(0)).updateWine();
+                }
+                else
+                {
+                    AlertDialog.Builder lBuilder = new AlertDialog.Builder(view.getContext());
+                    lBuilder.setTitle(R.string.add_wine_error_title);
+                    lBuilder.setMessage(R.string.add_wine_error_message);
+                    lBuilder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
+                            // Nothing to do
+                        }
+                    });
+                    AlertDialog lDialog = lBuilder.create();
+                    lDialog.show();
+                }
             }
         });
 

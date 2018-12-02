@@ -956,4 +956,16 @@ public class WineDetailFragment extends Fragment {
         msLabelPath = "";
         msPreviousLabelPath = "";
     }
+
+    public boolean canUpateWine()
+    {
+        if(     ((TextView)getView().findViewById(R.id.name_detail)).getText().toString().compareTo("") == 0 ||
+                ((TextView)getView().findViewById(R.id.region_detail)).getText().toString().compareTo("") == 0 ||
+                ((TextView)getView().findViewById(R.id.region_detail)).getText().toString().compareTo("") == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
