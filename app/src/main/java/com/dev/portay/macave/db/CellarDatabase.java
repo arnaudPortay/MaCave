@@ -60,7 +60,7 @@ public abstract class CellarDatabase extends RoomDatabase
                 public void onOpen(@NonNull SupportSQLiteDatabase pDb)
                 {
                     super.onOpen(pDb);
-                    new PopulateDBAsync(smInstance).execute();
+                    //new PopulateDBAsync(smInstance).execute();
                 }
             };
 
