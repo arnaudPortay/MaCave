@@ -837,7 +837,8 @@ public class WineDetailFragment extends Fragment {
         String lNewName = ((TextView)getView().findViewById(R.id.name_detail)).getText().toString();
         String lNewRegion = ((TextView)getView().findViewById(R.id.region_detail)).getText().toString();
         String lNewProducer = ((TextView)getView().findViewById(R.id.producer_detail)).getText().toString();
-        String lWineLabelPath = msDeletePicture ? "" : msLabelPath.compareTo("") == 0 ? "" : msLabelPath;
+        String lWineLabelPath = msDeletePicture ? "" : msLabelPath.compareTo("") == 0 ? mWineLabelPath : msLabelPath;
+
         if (msDeletePicture)
         {
             deletePicture();
